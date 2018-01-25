@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var serviceAccount = require("./path/kiosk-f1a66-firebase-adminsdk-434m3-8468b3596a.json");
+var serviceAccount = require("../path/kiosk-f1a66-firebase-adminsdk-434m3-8468b3596a.json");
 
 
 var admin = require("firebase-admin");
@@ -58,9 +58,6 @@ router.get("/token", function(req, res) {
     });
 });
 
-app.listen(3000, function() {  
-    console.log("My API is running...");
-});
 console.log("OKK")
 module.exports = router;
 
