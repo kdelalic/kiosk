@@ -38,7 +38,7 @@ class Content extends Component {
     }
 
     componentWillMount() {
-        const url = "https://crypto-212.herokuapp.com/"
+        const url = "/api/content"
         axios.get(url)
 			.then(response => {
 				this.setState({
