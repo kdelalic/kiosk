@@ -1,0 +1,20 @@
+.content {
+    margin-top: 64px;
+    margin-left: 64px;
+    height: 100%;
+    padding: 40px 40px 0;
+}
+
+.feed {
+    padding-top: 10px;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.headline {
+    margin: 0 2%;
+}
+
+.newsComp {
+    padding:0px 30px;
+}
