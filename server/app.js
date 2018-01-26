@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var auth = require("./routes/auth")(); 
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -12,6 +13,7 @@ var users = require('./routes/users');
 var path = require('path');
 
 var app = express();
+app.use(auth.initialize());
 app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +30,9 @@ app.use('/static', express.static(path.resolve('./client/build/static')))
 
 app.use('/', index);
 app.use('/users', users);
+
+
+
 
 app.get('*', function(req, res) {
   res.sendFile(path.resolve('./client/build/index.html'));
