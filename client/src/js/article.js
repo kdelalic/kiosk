@@ -45,11 +45,21 @@ class Article extends Component {
         })
     }
 
-    bookmark = event => {
+    bookmark = articleID => event => {
         this.setState({
             ...this.state,
             bookmarked: true
         })
+        axios.post('/api/bookmarks', {
+            refreshToken: this.state.user.refreshToken,
+            articleID: articleID,
+          })
+          .then( response => {
+            console.log(response);
+          })
+          .catch( error => {
+            console.log(error);
+        });
     }
 
     unbookmark = event => {
@@ -72,7 +82,7 @@ class Article extends Component {
                 <Divider />
                 <div className="cardActions">
                     <div className="actionButtons">
-                        <IconButton className="actionButton" onClick={this.state.bookmarked ? this.unbookmark : this.bookmark} color="primary">
+                        <IconButton className="actionButton" onClick={this.state.bookmarked ? this.unbookmark : this.bookmark(articleData)} color="primary">
                             {this.state.bookmarked ? <Bookmark className="actionIcon"/> : <BookmarkO className="actionIcon"/>}
                         </IconButton>
                         <IconButton onClick={this.state.shareOpen ? this.closeShare : this.openShare} color="primary">
