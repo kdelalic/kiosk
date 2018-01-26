@@ -7,8 +7,10 @@ var admin = require("firebase-admin");
 var request = require('request');
 var cheerio = require('cheerio');
 var og = require('open-graph');
-
-
+var jwt = require("jwt-simple");  
+var users = require("./users.js");  
+var cfg = require("./config.js"); 
+var auth = require("./auth")(); 
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -52,12 +54,39 @@ router.get('/api/content', function(req, res, next) {
 res.status(200).json(d);
 });
 
-router.get("/token", function(req, res) {  
+
+router.get("/", function(req, res) {  
     res.json({
         status: "My API is alive!"
     });
 });
 
+router.get("/user", auth.authenticate(), function(req, res) {  
+    res.json(users[req.user.id]);
+});
+
+router.post("/token", function(req, res) {  
+    if (req.body.email && req.body.password) {
+        var email = req.body.email;
+        var password = req.body.password;
+        var user = users.find(function(u) {
+            return u.email === email && u.password === password;
+        });
+        if (user) {
+            var payload = {
+                id: user.id
+            };
+            var token = jwt.encode(payload, cfg.jwtSecret);
+            res.json({
+                token: token
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    } else {
+        res.sendStatus(401);
+    }
+});
 console.log("OKK")
 module.exports = router;
 
