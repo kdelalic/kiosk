@@ -159,10 +159,11 @@ class Topbar extends Component {
 				...this.state,
 				user: result.user
 			}, () => {
-                axios.post('/user', {
+                axios.post('/api/user', {
                     uid: this.state.user.uid
                   })
                   .then( response => {
+                    console.log("post complete")
                     console.log(response);
                   })
                   .catch( error => {

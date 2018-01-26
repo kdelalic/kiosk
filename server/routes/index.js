@@ -22,20 +22,16 @@ var db = admin.firestore();
 
 /* GET home page. */
 d = {};
-//cid = [{"site" : "Coindesk", "id" : "4059a050tjcu9d591", "url" : "https://media.coindesk.com/uploads/2017/05/cropped-coindesk-new-favicon-192x192.png"},{"site" : "Bitcoin News", "id" : "4059a050tjcu9d58v", "url" : "https://news.bitcoin.com/wp-content/uploads/2017/07/btc_fav.png"}];
+
 db.getCollections().then(collections => {
 
  for (let c of collections) {
-    ///console.log(`Found collection with id: ${collection.id}`);
-    //cid.push(c.id)
 	db.collection(c.id).get()
 
     .then((snapshot) => {
         snapshot.forEach((doc) => {
         	var i = {}
         	d[doc.id] = doc.data()
-        	//d.add(i);
-        	 
         });
            
     })
@@ -47,13 +43,9 @@ db.getCollections().then(collections => {
 
 });
 
-//console.log(d)
 router.get('/api/content', function(req, res, next) {
-//res...render('index', { title: 'Express' });
-//var s =Array.from(d)
-res.status(200).json(d);
+    res.status(200).json(d);
 });
-
 
 router.get("/", function(req, res) {  
     res.json({
@@ -61,8 +53,8 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get("/user", auth.authenticate(), function(req, res) {  
-    res.json(users[req.user.id]);
+router.post("/api/user", function(req, res) {  
+    console.log(req.body.uid)
 });
 
 router.post("/token", function(req, res) {  
