@@ -256,11 +256,13 @@ class Topbar extends Component {
                                 </IconButton>
                             </div> 
                             :
-                            <Avatar alt="Avatar" src={} className={classes.avatar} />
+                            <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
+                                <Avatar alt="Avatar" src={this.state.user.photoURL}/>
+                            </IconButton>
                         }
                     </div>
                 </Toolbar>
-                <SideDrawer drawerOpen={this.state.drawerOpen}/>
+                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.state.user}/>
             </AppBar>
         )
     }
