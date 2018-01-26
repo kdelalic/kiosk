@@ -52,9 +52,9 @@ class LoginModal extends Component {
                         Login with one of the options below for a more personalized experience.
                     </div>
                     <div className="buttons">
-                        <IconButton className="loginFacebook"><FacebookIcon/></IconButton>
-                        <IconButton className="loginTwitter"><TwitterIcon/></IconButton>
-                        <IconButton className="loginGoogle"><GoogleIcon/></IconButton>
+                        <IconButton className="loginFacebook" onClick={this.props.handleLogin("facebook")}><FacebookIcon/></IconButton>
+                        <IconButton className="loginTwitter" onClick={this.props.handleLogin("twitter")}><TwitterIcon/></IconButton>
+                        <IconButton className="loginGoogle" onClick={this.props.handleLogin("google")}><GoogleIcon/></IconButton>
                     </div>
                     <div className="finePrint">
                         We promise to <span>never</span> post anything without your permission!

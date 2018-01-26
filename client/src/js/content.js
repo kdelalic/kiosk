@@ -3,7 +3,6 @@ import '../css/content.css'
 import Article from './article.js'
 import Typography from 'material-ui/Typography';
 import axios from 'axios'
-import ArticlesJSON from '../prince/articles.json'
 
 class Content extends Component {
 
@@ -45,7 +44,6 @@ class Content extends Component {
                     ...this.state,
                     allArticles: response.data
 				}, () => {
-                    console.log(this.state.allArticles)
                     this.changeSort(this.state.source)
                 });
 			})

@@ -16,6 +16,7 @@ import Tooltip from 'material-ui/Tooltip';
 import Popover from 'material-ui/Popover'
 import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
+import { base } from './firebase.js'
 
 class Topbar extends Component {
 
@@ -28,8 +29,28 @@ class Topbar extends Component {
             appsOpen: false,
             anchorEl: null,
             loginOpen: false,
+            user: null
         }
+
+        this.firebase = base.initializedApp.firebase_;
     }
+
+    componentWillMount() {
+		this.firebase.auth().onAuthStateChanged( (user) => {
+			if (user) {
+				this.setState({
+					...this.state,
+					user: user,
+					loading: false,
+				})
+			} else {
+				this.setState({
+					...this.state,
+					loading: false
+				})
+			}
+		});
+	}
 
     componentDidMount(){
         // chrome.topSites.get(topSites => {
@@ -123,6 +144,48 @@ class Topbar extends Component {
         })
     }
 
+    handleLogin = site => event => {
+		var provider = null
+		if(site === "facebook") {
+			provider = new this.firebase.auth.FacebookAuthProvider();
+		} else if (site === "google") {
+			provider = new this.firebase.auth.GoogleAuthProvider();
+		} else if (site === "twitter") {
+			provider = new this.firebase.auth.TwitterAuthProvider();
+        }
+
+		this.firebase.auth().signInWithPopup(provider).then(result => {
+			this.setState({
+				...this.state,
+				user: result.user
+			}, () => {
+                axios.post('/user', {
+                    uid: this.state.user.uid
+                  })
+                  .then( response => {
+                    console.log(response);
+                  })
+                  .catch( error => {
+                    console.log(error);
+                });
+                this.closeLogin()
+            })
+		});
+		
+		this.setState({ ...this.state, anchorEl: null });
+		event.preventDefault();
+    };
+    
+    handleLogout = () => {
+		this.firebase.auth().signOut().then( () => {
+			this.setState({
+				user: null
+			})
+		  }).catch(function(error) {
+			console.log("LOGOUT ERROR" + error)
+		});
+	}
+
     render() {
         return (
             <AppBar position="fixed" className="appBar">
@@ -163,7 +226,7 @@ class Topbar extends Component {
                                 horizontal: "center",
                             }}
                             >
-                            <div class="arrow-up"></div>
+                            <div className="arrow-up"></div>
                             <ChromeApps/>
                         </Popover>
                         <div className="topSites">
@@ -180,9 +243,9 @@ class Topbar extends Component {
                                 })
                             }
                         </div>
-                        <Button className="loginButton" raised color="accent" onClick={this.openLogin}>Login</Button>
-                        <LoginModal loginOpen={this.state.loginOpen}/>
-                        <IconButton className="moreButton" color="contrast" aria-label="Menu" onClick={this.openDrawer}>
+                        <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
+                        <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
+                        <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
                             <More className="moreIcon"/>
                         </IconButton>
                     </div>
