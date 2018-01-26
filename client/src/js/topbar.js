@@ -14,6 +14,7 @@ import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton'
 import Tooltip from 'material-ui/Tooltip';
 import Popover from 'material-ui/Popover'
+import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
 import { base } from './firebase.js'
@@ -155,15 +156,17 @@ class Topbar extends Component {
         }
 
 		this.firebase.auth().signInWithPopup(provider).then(result => {
+            console.log(result)
 			this.setState({
 				...this.state,
 				user: result.user
 			}, () => {
-                axios.post('/api/user', {
-                    uid: this.state.user.uid
+                axios.get('/api/user', {
+                    headers: {
+                        refreshToken: this.state.user.refreshToken
+                    }
                   })
                   .then( response => {
-                    console.log("post complete")
                     console.log(response);
                   })
                   .catch( error => {
@@ -244,11 +247,17 @@ class Topbar extends Component {
                                 })
                             }
                         </div>
-                        <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
-                        <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
-                        <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
-                            <More className="moreIcon"/>
-                        </IconButton>
+                        {this.state.user === null ? 
+                            <div>
+                                <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
+                                <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
+                                <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
+                                    <More className="moreIcon"/>
+                                </IconButton>
+                            </div> 
+                            :
+                            <Avatar alt="Avatar" src={} className={classes.avatar} />
+                        }
                     </div>
                 </Toolbar>
                 <SideDrawer drawerOpen={this.state.drawerOpen}/>
