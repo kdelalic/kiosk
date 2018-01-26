@@ -10,11 +10,36 @@
     display: flex;
     flex-flow: row wrap;
 }
-
-.headline {
-    margin: 0 2%;
-}
-
 .newsComp {
     padding:0px 30px;
+}
+
+@media(min-width:2000px){
+    .headline {
+        margin: 0 0.5%;
+    }
+}
+
+@media(max-width:1999px){
+    .headline {
+        margin: 0 1%;
+    }
+}
+
+@media(max-width: 1399px) {
+    .headline {
+        margin: 0 1.33%;
+    }
+}
+
+@media(max-width: 1199px) {
+    .headline {
+        margin: 0 2%;
+    }
+}
+
+@media(max-width: 800px) {
+    .headline {
+        margin: 0 4%;
+    }
 }

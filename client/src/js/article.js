@@ -11,6 +11,7 @@ import SlackIcon from 'react-icons/lib/fa/slack'
 import CloseIcon from 'react-icons/lib/md/close'
 import BookmarkO from 'react-icons/lib/fa/bookmark-o'
 import Bookmark from 'react-icons/lib/fa/bookmark'
+import axios from 'axios'
 
 
 class Article extends Component {
