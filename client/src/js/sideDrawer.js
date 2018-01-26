@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import '../css/sideDrawer.css'
 import Drawer from 'material-ui/Drawer';
-import List from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button'
 
 class SideDrawer extends Component {

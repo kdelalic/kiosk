@@ -4,6 +4,7 @@ import '../css/topbar.css'
 import SideDrawer from './sideDrawer.js'
 import ChromeApps from './chromeApps.js'
 import LoginModal from './loginModal.js'
+import TopSites from './topSites.js'
 import Logo from '../img/logo.png'
 import AppsLogo from '../img/apps.svg'
 import axios from 'axios'
@@ -12,7 +13,6 @@ import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton'
-import Tooltip from 'material-ui/Tooltip';
 import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
@@ -163,7 +163,6 @@ class Topbar extends Component {
         }
 
 		this.firebase.auth().signInWithPopup(provider).then(result => {
-            console.log(result)
 			this.setState({
 				...this.state,
 				user: result.user
@@ -174,7 +173,7 @@ class Topbar extends Component {
                     }
                   })
                   .then( response => {
-                    console.log(response);
+                    //console.log(response);
                   })
                   .catch( error => {
                     console.log(error);
@@ -241,20 +240,7 @@ class Topbar extends Component {
                             <div className="arrow-up"></div>
                             <ChromeApps/>
                         </Popover>
-                        <div className="topSites">
-                            { this.state.sites && this.state.sites.map((site) => {
-                                    const src = "https://s2.googleusercontent.com/s2/favicons?domain=" + site.url
-                                    // const src = "https://logo.clearbit.com/" + site.url
-                                    return (
-                                        <Tooltip id="tooltip-icon" className="spacing" title={this.cleanURL(site.url)}>
-                                            <Button href={site.url} className="topSite">
-                                                <img src={src} alt=""/>
-                                            </Button>
-                                        </Tooltip>
-                                    )
-                                })
-                            }
-                        </div>
+                        <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/>
                         {this.state.user === null ? 
                             <div>
                                 <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
