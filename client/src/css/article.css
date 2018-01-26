@@ -1,5 +1,5 @@
 .card {
-    border-radius: 5px!important;
+    border-radius: 5px !important;
     padding: 0;
     overflow: hidden;
     transition: all 0.25s;
@@ -16,17 +16,18 @@
 }
 
 .card:hover {
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);    transition: all 0.25s;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s;
 }
 
-@media(min-width:2000px){
+@media(min-width:2000px) {
     .card {
         width: 19%;
         margin: 0.5%;
     }
 }
 
-@media(max-width:1999px){
+@media(max-width:1999px) {
     .card {
         width: 23%;
         margin: 1%;
@@ -69,13 +70,13 @@
 }
 
 .title {
-    padding: 35px 25px!important;
-    font-size: 20px!important;
-    margin: auto!important;
+    padding: 35px 25px !important;
+    font-size: 20px !important;
+    margin: auto !important;
 }
 
-.articleDescription p{
-    font-size: 16px!important;
+.articleDescription p {
+    font-size: 16px !important;
     position: absolute;
     width: 100%;
     top: 50%;
@@ -84,7 +85,7 @@
 
 .cardActions {
     justify-content: space-between;
-    width:100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     padding: 5px;
@@ -103,12 +104,12 @@
     flex-direction: row;
     transition: all 0.25s;
     opacity: 1;
-    margin-right: 15px!important;
+    margin-right: 15px !important;
 }
 
 .shareButtons button {
-    width: 38px!important;
-    height: 38px!important;
+    width: 38px !important;
+    height: 38px !important;
     color: white;
     margin: 3px;
 }
@@ -120,33 +121,33 @@
 }
 
 .shareFacebook {
-    background: #3B5998!important;
+    background: #3B5998 !important;
 }
 
 .shareFacebook:hover {
-    background: #476bb8!important;
+    background: #476bb8 !important;
 }
 
 .shareTwitter {
-    background: #1DA1F2!important;
+    background: #1DA1F2 !important;
 }
 
 .shareTwitter:hover {
-    background: #3eaef4!important;
+    background: #3eaef4 !important;
 }
 
 .shareLinkedin {
-    background: #0077B5!important;
+    background: #0077B5 !important;
 }
 
 .shareLinkedin:hover {
-    background: #0095e6!important;
+    background: #0095e6 !important;
 }
 
 .shareSlack {
-    background: #e8a723!important;
+    background: #e8a723 !important;
 }
 
 .shareSlack:hover {
-    background: #ecb546!important;
+    background: #ecb546 !important;
 }

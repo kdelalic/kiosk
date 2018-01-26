@@ -123,7 +123,7 @@ class Topbar extends Component {
         var output = null
         axios.get("https://logo.clearbit.com/" + this.cleanURL(URL))
             .then(response => {
-                 output =  "https://logo.clearbit.com/" + URL
+                output = "https://logo.clearbit.com/" + URL
             })
             .catch(err => {
                 axios.get("https://s2.googleusercontent.com/s2/favicons?domain=" + this.cleanURL(URL))
@@ -153,50 +153,52 @@ class Topbar extends Component {
     }
 
     handleLogin = site => event => {
-		var provider = null
-		if(site === "facebook") {
-			provider = new this.firebase.auth.FacebookAuthProvider();
-		} else if (site === "google") {
-			provider = new this.firebase.auth.GoogleAuthProvider();
-		} else if (site === "twitter") {
-			provider = new this.firebase.auth.TwitterAuthProvider();
+        var provider = null
+        if (site === "facebook") {
+            provider = new this.firebase.auth.FacebookAuthProvider();
+        } else if (site === "google") {
+            provider = new this.firebase.auth.GoogleAuthProvider();
+        } else if (site === "twitter") {
+            provider = new this.firebase.auth.TwitterAuthProvider();
         }
 
-		this.firebase.auth().signInWithPopup(provider).then(result => {
-			this.setState({
-				...this.state,
-				user: result.user
-			}, () => {
+        this.firebase.auth().signInWithPopup(provider).then(result => {
+            this.setState({
+                ...this.state,
+                user: result.user
+            }, () => {
                 axios.get('/api/user', {
-                    headers: {
-                        refreshToken: this.state.user.refreshToken
-                    }
-                  })
-                  .then( response => {
-                    //console.log(response);
-                  })
-                  .catch( error => {
-                    console.log(error);
-                });
+                        headers: {
+                            refreshToken: this.state.user.refreshToken
+                        }
+                    })
+                    .then(response => {
+                        //console.log(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
                 this.closeLogin()
             })
-		});
-		
-		this.setState({ ...this.state, anchorEl: null });
-		event.preventDefault();
+        });
+
+        this.setState({ ...this.state,
+            anchorEl: null
+        });
+        event.preventDefault();
     };
-    
+
     handleLogout = () => {
-		this.firebase.auth().signOut().then( () => {
-			this.setState({
-				user: null
-			}, () => {
+        this.firebase.auth().signOut().then(() => {
+            this.setState({
+                user: null
+            }, () => {
                 this.closeDrawer()
             })
-		  }).catch(function(error) {
-			console.log("LOGOUT ERROR" + error)
-		});
-	}
+        }).catch(function (error) {
+            console.log("LOGOUT ERROR" + error)
+        });
+    }
 
     render() {
         return (
@@ -241,14 +243,14 @@ class Topbar extends Component {
                             <ChromeApps/>
                         </Popover>
                         <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/>
-                        {this.state.user === null ? 
+                        {this.state.user === null ?
                             <div>
                                 <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
                                 <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
                                 <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
                                     <More className="moreIcon"/>
                                 </IconButton>
-                            </div> 
+                            </div>
                             :
                             <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
                                 <Avatar alt="Avatar" src={this.state.user.photoURL}/>

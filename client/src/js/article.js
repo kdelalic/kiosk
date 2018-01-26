@@ -52,15 +52,15 @@ class Article extends Component {
             bookmarked: true
         })
         axios.post('/api/bookmarks', {
-            refreshToken: this.state.user.refreshToken,
-            articleID: articleID,
-          })
-          .then( response => {
-            console.log(response);
-          })
-          .catch( error => {
-            console.log(error);
-        });
+                refreshToken: this.state.user.refreshToken,
+                articleID: articleID,
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     unbookmark = event => {

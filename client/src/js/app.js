@@ -5,7 +5,11 @@ import Content from './content.js'
 import Sidebar from './sidebar.js'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
+import { connect } from 'react-redux';
 
+import {
+    setUser
+} from './redux.js';
 
 const theme = createMuiTheme({
 	palette: {
@@ -14,7 +18,7 @@ const theme = createMuiTheme({
 	},
 });
 
-class App extends Component {
+export class App extends Component {
 
     constructor(props) {
         super(props)
@@ -24,6 +28,7 @@ class App extends Component {
         }
     }
 
+    
     sortBySource = source => event =>{
         this.setState({
             ...this.state,
@@ -46,4 +51,17 @@ class App extends Component {
     }
 }
 
-export default App
+const mapStateToProps = (state, ownProps) => ({
+    user: state.user,
+});
+
+const mapDispatchToProps = {
+    setUser
+};
+
+const AppContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);
+
+export default AppContainer

@@ -10,17 +10,18 @@
     display: flex;
     flex-flow: row wrap;
 }
+
 .newsComp {
-    padding:0px 30px;
+    padding: 0px 30px;
 }
 
-@media(min-width:2000px){
+@media(min-width:2000px) {
     .headline {
         margin: 0 0.5%;
     }
 }
 
-@media(max-width:1999px){
+@media(max-width:1999px) {
     .headline {
         margin: 0 1%;
     }
