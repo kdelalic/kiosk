@@ -3,6 +3,7 @@ import '../css/sideDrawer.css'
 import Drawer from 'material-ui/Drawer';
 import List from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Button from 'material-ui/Button'
 
 class SideDrawer extends Component {
 
@@ -23,17 +24,12 @@ class SideDrawer extends Component {
         }
     }
 
-    closeDrawer = () => {
-        this.setState({
-            ...this.state,
-            drawerOpen: false
-        })
-    }
-
     render() {
         return (
-            <Drawer className="sideDrawer" anchor="right" open={this.state.drawerOpen} onClose={this.closeDrawer}>
-                <div>test</div>
+            <Drawer className="drawer" anchor="right" open={this.state.drawerOpen} onClose={this.props.closeDrawer}>
+                <div className="drawerBody">
+                    <Button className="loginButton" raised color="secondary" onClick={this.props.handleLogout}>Logout</Button>
+                </div>
             </Drawer>
         )
     }

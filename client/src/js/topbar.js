@@ -85,6 +85,13 @@ class Topbar extends Component {
         event.preventDefault()
     }
 
+    closeDrawer = () => {
+        this.setState({
+            ...this.state,
+            drawerOpen: false
+        })
+    }
+
     openApps = event => {
         this.setState({
             ...this.state,
@@ -184,7 +191,9 @@ class Topbar extends Component {
 		this.firebase.auth().signOut().then( () => {
 			this.setState({
 				user: null
-			})
+			}, () => {
+                this.closeDrawer()
+            })
 		  }).catch(function(error) {
 			console.log("LOGOUT ERROR" + error)
 		});
@@ -199,7 +208,6 @@ class Topbar extends Component {
                             <img src={Logo} alt="logo" />
                         </a>
                         <form className="searchBar" onSubmit={this.handleSearch}>
-                            
                             <TextField
                                 id="search"
                                 label="Search"
@@ -262,7 +270,7 @@ class Topbar extends Component {
                         }
                     </div>
                 </Toolbar>
-                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.state.user}/>
+                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.state.user} handleLogout={this.handleLogout} closeDrawer={this.closeDrawer}/>
             </AppBar>
         )
     }
