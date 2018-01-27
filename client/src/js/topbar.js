@@ -34,7 +34,8 @@ class Topbar extends Component {
             drawerOpen: false,
             appsOpen: false,
             anchorEl: null,
-            loginOpen: false
+            loginOpen: false,
+            topSitesVisible: true
         }
         this.firebase = base.initializedApp.firebase_;
     }
@@ -120,6 +121,16 @@ class Topbar extends Component {
         } else {
             return splitURL[2]
         }
+    }
+
+    toggleTopSites = (event, checked) => {
+        this.setState({
+            ...this.state,
+            topSitesVisible: checked
+        }, () => {
+            console.log(this.state.topSitesVisible)
+        })
+        event.preventDefault()
     }
 
     getLogo = URL => {
@@ -239,7 +250,7 @@ class Topbar extends Component {
                             <div className="arrow-up"></div>
                             <ChromeApps/>
                         </Popover>
-                        <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/>
+                        {this.state.topSitesVisible ? <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/> : <div></div>}
                         {this.props.user === null ?
                             <div>
                                 <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
@@ -255,7 +266,7 @@ class Topbar extends Component {
                         }
                     </div>
                 </Toolbar>
-                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.props.user} handleLogout={this.handleLogout} closeDrawer={this.closeDrawer}/>
+                <SideDrawer drawerOpen={this.state.drawerOpen} topSitesVisible={this.state.topSitesVisible} toggleTopSites={this.toggleTopSites} user={this.props.user} handleLogout={this.handleLogout} closeDrawer={this.closeDrawer}/>
             </AppBar>
         )
     }

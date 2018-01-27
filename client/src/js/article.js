@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import '../css/article.css'
 import IconButton from 'material-ui/IconButton'
 import Typography from 'material-ui/Typography'
@@ -12,8 +12,16 @@ import CloseIcon from 'react-icons/lib/md/close'
 import BookmarkO from 'react-icons/lib/fa/bookmark-o'
 import Bookmark from 'react-icons/lib/fa/bookmark'
 import axios from 'axios'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
+import {
+    ShareButtons,
+} from 'react-share';
 
+const {
+    FacebookShareButton,
+    LinkedinShareButton,
+    TwitterShareButton,
+} = ShareButtons;
 
 class Article extends Component {
 
@@ -92,10 +100,24 @@ class Article extends Component {
                         </IconButton>
                     </div>
                     <div className={this.state.shareOpen ? "shareButtons" : "shareButtons hideShare"}>
-                        <IconButton className="shareFacebook"><FacebookIcon/></IconButton>
-                        <IconButton className="shareTwitter"><TwitterIcon/></IconButton>
-                        <IconButton className="shareLinkedin"><LinkedinIcon/></IconButton>
-                        <IconButton className="shareSlack"><SlackIcon/></IconButton>
+                        <FacebookShareButton url={articleData.url} title={articleData.title}>
+                            <IconButton className="shareFacebook">
+                                <FacebookIcon/>
+                            </IconButton>
+                        </FacebookShareButton>
+                        <TwitterShareButton url={articleData.url} title={articleData.title}>
+                            <IconButton className="shareTwitter">
+                                <TwitterIcon/>
+                            </IconButton>
+                        </TwitterShareButton>
+                        <LinkedinShareButton url={articleData.url} title={articleData.title}>
+                            <IconButton className="shareLinkedin"><LinkedinIcon/></IconButton>
+                        </LinkedinShareButton>
+                        {
+                            // <TwitterShareButton url={articleData.url} title={articleData.title}>
+                            // <IconButton className="shareSlack"><SlackIcon/></IconButton>
+                            // </TwitterShareButton>
+                        }
                     </div>
                 </div>
             </div>

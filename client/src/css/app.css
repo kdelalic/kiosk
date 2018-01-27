@@ -2,3 +2,8 @@
     height: 100%;
     width: 100%;
 }
+
+.hidden {
+    opacity: 0!important;
+    z-index: -1;
+}
