@@ -5,11 +5,6 @@ import Content from './content.js'
 import Sidebar from './sidebar.js'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
-import { connect } from 'react-redux';
-
-import {
-    setUser
-} from './redux.js';
 
 const theme = createMuiTheme({
 	palette: {
@@ -51,17 +46,4 @@ export class App extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    user: state.user,
-});
-
-const mapDispatchToProps = {
-    setUser
-};
-
-const AppContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
-
-export default AppContainer
+export default App;

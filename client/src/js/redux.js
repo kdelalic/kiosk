@@ -8,12 +8,10 @@ export const setUser = user => ({
 export const user = (state = {}, action) => {
     switch (action.type) {
         case 'SET_USER':
-            return [
+            return {
                 ...state,
-                {
-                    user: action.user
-                }
-            ]
+                user: action.user
+            }
         default:
             return state
     }
@@ -21,7 +19,7 @@ export const user = (state = {}, action) => {
 
 export default user
 
-export function configureStore(initialState = {}) {
+export function configureStore(initialState = {user: null}) {
     const store = createStore(user, initialState);
     return store;
 }

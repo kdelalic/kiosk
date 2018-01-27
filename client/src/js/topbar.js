@@ -18,6 +18,11 @@ import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
 import { base } from './firebase.js'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+    setUser
+} from './redux.js';
 
 class Topbar extends Component {
 
@@ -29,19 +34,17 @@ class Topbar extends Component {
             drawerOpen: false,
             appsOpen: false,
             anchorEl: null,
-            loginOpen: false,
-            user: null
+            loginOpen: false
         }
-
         this.firebase = base.initializedApp.firebase_;
     }
 
     componentWillMount() {
 		this.firebase.auth().onAuthStateChanged( (user) => {
 			if (user) {
+                this.props.setUser(user)
 				this.setState({
 					...this.state,
-					user: user,
 					loading: false,
 				})
 			} else {
@@ -163,24 +166,21 @@ class Topbar extends Component {
         }
 
         this.firebase.auth().signInWithPopup(provider).then(result => {
-            this.setState({
-                ...this.state,
-                user: result.user
-            }, () => {
-                axios.get('/api/user', {
-                        headers: {
-                            refreshToken: this.state.user.refreshToken
-                        }
-                    })
-                    .then(response => {
-                        //console.log(response);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-                this.closeLogin()
-            })
-        });
+            this.props.setUser(result.user)
+
+            axios.get('/api/user', {
+                    headers: {
+                        refreshToken: this.props.user.refreshToken
+                    }
+                })
+                .then(response => {
+                    //console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            this.closeLogin()
+        })
 
         this.setState({ ...this.state,
             anchorEl: null
@@ -190,11 +190,8 @@ class Topbar extends Component {
 
     handleLogout = () => {
         this.firebase.auth().signOut().then(() => {
-            this.setState({
-                user: null
-            }, () => {
-                this.closeDrawer()
-            })
+            this.props.setUser(null)
+            this.closeDrawer()
         }).catch(function (error) {
             console.log("LOGOUT ERROR" + error)
         });
@@ -243,7 +240,7 @@ class Topbar extends Component {
                             <ChromeApps/>
                         </Popover>
                         <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/>
-                        {this.state.user === null ?
+                        {this.props.user === null ?
                             <div>
                                 <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
                                 <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
@@ -253,15 +250,28 @@ class Topbar extends Component {
                             </div>
                             :
                             <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
-                                <Avatar alt="Avatar" src={this.state.user.photoURL}/>
+                                <Avatar alt="Avatar" src={this.props.user.photoURL}/>
                             </IconButton>
                         }
                     </div>
                 </Toolbar>
-                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.state.user} handleLogout={this.handleLogout} closeDrawer={this.closeDrawer}/>
+                <SideDrawer drawerOpen={this.state.drawerOpen} user={this.props.user} handleLogout={this.handleLogout} closeDrawer={this.closeDrawer}/>
             </AppBar>
         )
     }
 }
 
-export default Topbar
+const mapStateToProps = state => ({
+    user: state.user,
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setUser: bindActionCreators(setUser, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Topbar);

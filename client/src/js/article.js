@@ -12,6 +12,7 @@ import CloseIcon from 'react-icons/lib/md/close'
 import BookmarkO from 'react-icons/lib/fa/bookmark-o'
 import Bookmark from 'react-icons/lib/fa/bookmark'
 import axios from 'axios'
+import { connect } from 'react-redux';
 
 
 class Article extends Component {
@@ -52,7 +53,7 @@ class Article extends Component {
             bookmarked: true
         })
         axios.post('/api/bookmarks', {
-                refreshToken: this.state.user.refreshToken,
+                refreshToken: this.props.user.refreshToken,
                 articleID: articleID,
             })
             .then(response => {
@@ -102,4 +103,10 @@ class Article extends Component {
     }
 }
 
-export default Article
+const mapStateToProps = state => ({
+    user: state.user,
+});
+
+export default connect(
+    mapStateToProps
+)(Article);
