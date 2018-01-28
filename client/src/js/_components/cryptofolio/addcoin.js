@@ -12,7 +12,6 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Close from 'react-icons/lib/md/close'
 import coins from './coins.json';

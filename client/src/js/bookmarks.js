@@ -2,12 +2,8 @@ import React, { Component } from 'react'
 
 import '../css/content.css'
 import Article from './article.js'
-
-import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
-import Button from 'material-ui/Button'
 
-import axios from 'axios'
 import {firestore} from './firebase.js'
 import {connect} from 'react-redux';
 

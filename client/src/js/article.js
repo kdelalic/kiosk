@@ -9,14 +9,13 @@ import ShareIcon from 'react-icons/lib/ti/arrow-forward'
 import FacebookIcon from 'react-icons/lib/fa/facebook'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
 import LinkedinIcon from 'react-icons/lib/fa/linkedin'
-import SlackIcon from 'react-icons/lib/fa/slack'
+// import SlackIcon from 'react-icons/lib/fa/slack'
 import CloseIcon from 'react-icons/lib/md/close'
 import BookmarkO from 'react-icons/lib/fa/bookmark-o'
 import Bookmark from 'react-icons/lib/fa/bookmark'
 
 import {firestore} from './firebase.js'
 
-import axios from 'axios'
 import {connect} from 'react-redux';
 import {
     ShareButtons,
@@ -60,24 +59,31 @@ class Article extends Component {
         })
     }
 
-    bookmark = articleID => event => {
+    bookmark = event => {
+        event.preventDefault()
         this.setState({
             ...this.state,
             bookmarked: true
         })
         firestore.collection("users").doc(this.props.user.uid).set({
             bookmarks: {
-                [this.props.id]: articleID
+                [this.props.id]: this.state.articleData
             }
         }, { merge: true })
 
     }
 
     unbookmark = event => {
+        event.preventDefault()
         this.setState({
             ...this.state,
             bookmarked: false
         })
+        // firestore.collection("users").doc(this.props.user.uid).update({
+        //     bookmarks: {
+        //         [this.props.id]: firestore.FieldValue.delete()
+        //     }
+        // })
     }
 
     render() {
@@ -93,8 +99,8 @@ class Article extends Component {
                 <Divider />
                 <div className="cardActions">
                     <div className="actionButtons">
-                        <IconButton className={"actionButton bookmark-button" + (this.state.bookmarked ? ' active' : '')} onClick={this.state.bookmarked ? this.unbookmark : this.bookmark(articleData)} color="primary">
-                            <Bookmark className="actionIcon" />
+                        <IconButton className={"actionButton bookmark-button" + (this.state.bookmarked ? ' active' : '')} onClick={this.state.bookmarked ? this.unbookmark : this.bookmark} color="primary">
+                            {this.state.bookmarked ? <Bookmark className="actionIcon bookmarkedIcon" /> : <BookmarkO className="actionIcon" />}
                         </IconButton>
                         <IconButton onClick={this.state.shareOpen ? this.closeShare : this.openShare} color="primary">
                             {this.state.shareOpen ? <CloseIcon size={21} className="actionIcon"/> : <ShareIcon size={21} className="actionIcon"/>}
