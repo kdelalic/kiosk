@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
+
 import '../css/content.css'
 import Article from './article.js'
-import Typography from 'material-ui/Typography';
+
+import Grid from 'material-ui/Grid'
+import Typography from 'material-ui/Typography'
+import Button from 'material-ui/Button'
+
 import axios from 'axios'
+
+import {
+    Link
+} from 'react-router-dom'
 
 class Content extends Component {
 
@@ -10,7 +19,8 @@ class Content extends Component {
         super(props)
 
         this.state = {
-            source: "all"
+            source: "all",
+            cryptofolio: false
         }
     }
 
@@ -53,25 +63,39 @@ class Content extends Component {
     }
 
     render() {
-        return (
+        const { cryptofolio } = this.state;
+        if (cryptofolio) return (
             <div className="content">
-                <div className="headline">
-                    <Typography type="headline" component="h2" className="content-title">
-                        {this.props.bookmarksOpen ? "Bookmarks" : this.state.source === "all" ? "Latest News" : this.state.source}
-                    </Typography>
+                <Typography type="headline" component="h2" className="content-title">
+                    CryptoFolio
+                </Typography>
+            </div>
+        )
+        else return (
+            <div className="content">
+                <Grid container spacing={24} className="headline">
+                    <Grid item md={6}>
+                        <Typography type="headline" component="h2" className="content-title">
+                            {this.state.source === "all" ? "Latest News" : this.state.source}
+                        </Typography>
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <Link to={'/cryptofolio'}>
+                            <Button raised color="secondary" style={{ float: 'right' }}>
+                                Cryptofolio
+                            </Button>
+                        </Link>
+                    </Grid>
+                </Grid>
+
+                <div className="feed">
+                    {this.state.articles && Object.keys(this.state.articles).map((key) => {
+                        return (
+                            <Article className="newsComp" key={key} articleData={this.state.articles[key]}/>
+                        )
+                    })}
                 </div>
-                {this.props.bookmarksOpen ? 
-                    <div className="bookmarks">
-                    </div>
-                :
-                    <div className="feed">
-                        {this.state.articles && Object.keys(this.state.articles).map((key) => {
-                            return (
-                                <Article className="newsComp" key={key} articleData={this.state.articles[key]}/>
-                            )
-                        })}
-                    </div>
-                }
             </div>
         )
     }
