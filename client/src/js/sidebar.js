@@ -35,27 +35,27 @@ class Sidebar extends Component {
                 "source-3": {
                     name: "Bitcoinist",
                     logo: Bitcoinist,
-                    url: "https://news.bitcoin.com/"
+                    url: "http://bitcoinist.com/"
                 },
                 "source-4": {
                     name: "Bitmag",
                     logo: Bitmag,
-                    url: "https://news.bitcoin.com/"
+                    url: "https://bitcoinmagazine.com/"
                 },
                 "source-5": {
                     name: "Blockonomi",
                     logo: Blockonomi,
-                    url: "https://news.bitcoin.com/"
+                    url: "https://blockonomi.com/"
                 },
                 "source-6": {
                     name: "Coinmeme",
                     logo: Coinmeme,
-                    url: "https://news.bitcoin.com/"
+                    url: "https://coinmeme.io/"
                 },
                 "source-7": {
                     name: "The Blockchain",
                     logo: TheBlockchain,
-                    url: "https://news.bitcoin.com/"
+                    url: "http://the-blockchain.com/"
                 },
             }
         }
