@@ -56,7 +56,7 @@ class Content extends Component {
         return (
             <div className="content">
                 <div className="headline">
-                    <Typography type="headline" component="h2">
+                    <Typography type="headline" component="h2" className="content-title">
                         {this.state.source === "all" ? "Latest News" : this.state.source}
                     </Typography>
                 </div>

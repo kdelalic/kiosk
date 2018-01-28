@@ -218,7 +218,7 @@ class Topbar extends Component {
                         <a href="https://loving-morse-4f5653.netlify.com/">
                             <img src={Logo} alt="logo" />
                         </a>
-                        <form className="searchBar" onSubmit={this.handleSearch}>
+                        {/* <form className="searchBar" onSubmit={this.handleSearch}>
                             <TextField
                                 id="search"
                                 label="Search"
@@ -228,7 +228,7 @@ class Topbar extends Component {
                                 margin="normal"
                             />
                             <SearchIcon className="searchIcon"/>
-                        </form>
+                        </form> */}
                     </div>
                     <div className="right">
                         <Button ref={node => {this.button = node}} onClick={this.openApps} className="appsLogo">
@@ -250,6 +250,7 @@ class Topbar extends Component {
                             }}
                             >
                             <div className="arrow-up"></div>
+                            
                             <ChromeApps/>
                         </Popover>
                         {this.state.topSitesVisible ? <TopSites sites={this.state.sites} cleanURL={this.cleanURL}/> : <div></div>}
