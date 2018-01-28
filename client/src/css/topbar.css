@@ -1,9 +1,7 @@
 .appBar {
-    background-color: #efefef!important;
+    background-color: #fff!important;
     color: black!important;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 
-                0px 0px 0px 0px rgba(0, 0, 0, 0.14), 
-                0px 0px 10px 0px rgba(0, 0, 0, 0.12)!important;
+    box-shadow: 0px 2px 7px -1px rgba(0, 0, 0, 0.1) !important;
 }
 
 .appBar > div {
@@ -37,6 +35,11 @@
     margin: 0!important;
     width: 100%;
 }
+
+.searchField div::before {
+    background: #e6eaec;
+}
+
 .searchIcon {
     bottom: 8px;
     position: absolute;
@@ -60,7 +63,7 @@
 }
 
 .right .appsLogo img {
-    width: 25px;
+    width: 22px;
 }
 
 .right .topSites {
@@ -93,6 +96,11 @@
 
 .moreButton {
     color: black!important;
+}
+
+.moreButton span div {
+    width: 34px;
+    height: 34px;
 }
 
 .moreIcon {
