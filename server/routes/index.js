@@ -11,6 +11,7 @@ var jwt = require("jwt-simple");
 var users = require("./users.js");  
 var cfg = require("./config.js"); 
 var auth = require("./auth")(); 
+var shuffle = require('shuffle-array');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -42,7 +43,7 @@ db.getCollections().then(collections => {
     .then((snapshot) => {
         snapshot.forEach((doc) => {
         	var i = {}
-        	d[doc.id] = doc.data()
+            d[doc.id] = doc.data()
         });
            
     })
@@ -56,7 +57,15 @@ db.getCollections().then(collections => {
 });
 
 router.get('/api/content', function(req, res, next) {
-    res.status(200).json(d);
+    d = Object.keys(d)
+    .map((key) => ({key, value: d[key]}))
+    .sort((a, b) => b.key.localeCompare(a.key))
+    .reduce((acc, e) => {
+      acc[e.key] = e.value;
+      return acc;
+    }, {});
+//console.log(JSON.stringify(d));
+res.status(200).json(d);
 });
 
 router.get("/", function(req, res) {  
