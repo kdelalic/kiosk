@@ -82,11 +82,12 @@ class Topbar extends Component {
     }
 
     openDrawer = event => {
+        event.preventDefault()
+
         this.setState({
             ...this.state,
             drawerOpen: true
         })
-        event.preventDefault()
     }
 
     closeDrawer = () => {
@@ -97,12 +98,13 @@ class Topbar extends Component {
     }
 
     openApps = event => {
+        event.preventDefault()
+
         this.setState({
             ...this.state,
             appsOpen: true,
             anchorEl: findDOMNode(this.button),
         })
-        event.preventDefault()
     }
 
     closeApps = event => {
@@ -254,7 +256,7 @@ class Topbar extends Component {
                         {this.props.user === null ?
                             <div>
                                 <Button className="loginButton" raised color="secondary" onClick={this.openLogin}>Login</Button>
-                                <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin}/>
+                                <LoginModal loginOpen={this.state.loginOpen} handleLogin={this.handleLogin} closeLogin={this.closeLogin} />
                                 <IconButton className="moreButton" aria-label="Menu" onClick={this.openDrawer}>
                                     <More className="moreIcon"/>
                                 </IconButton>

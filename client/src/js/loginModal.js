@@ -32,6 +32,8 @@ class LoginModal extends Component {
             ...this.state,
             loginOpen: false
         })
+
+        this.props.closeLogin();
     }
 
     render() {
