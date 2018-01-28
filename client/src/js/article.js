@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import '../css/article.css'
+
 import IconButton from 'material-ui/IconButton'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
+
 import ShareIcon from 'react-icons/lib/ti/arrow-forward'
 import FacebookIcon from 'react-icons/lib/fa/facebook'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
@@ -11,6 +13,9 @@ import SlackIcon from 'react-icons/lib/fa/slack'
 import CloseIcon from 'react-icons/lib/md/close'
 import BookmarkO from 'react-icons/lib/fa/bookmark-o'
 import Bookmark from 'react-icons/lib/fa/bookmark'
+
+import {firestore} from './firebase.js'
+
 import axios from 'axios'
 import {connect} from 'react-redux';
 import {
@@ -60,16 +65,12 @@ class Article extends Component {
             ...this.state,
             bookmarked: true
         })
-        axios.post('/api/bookmarks', {
-                refreshToken: this.props.user.refreshToken,
-                articleID: articleID,
-            })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        firestore.collection("users").doc(this.props.user.uid).set({
+            bookmarks: {
+                [this.props.id]: articleID
+            }
+        }, { merge: true })
+
     }
 
     unbookmark = event => {

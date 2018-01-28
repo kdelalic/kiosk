@@ -30,7 +30,7 @@ var db = admin.firestore();
 
 /* GET home page. */
 d = {};
-sources = ["bitcoin","coindesk"]
+sources = ["bitcoinist","bitcoin","bitmag","theblockchain","coindesk","blockonomi","coinmeme"]
 db.getCollections().then(collections => {
 
  for (let c of collections) {

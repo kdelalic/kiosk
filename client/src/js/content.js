@@ -92,7 +92,7 @@ class Content extends Component {
                 <div className="feed">
                     {this.state.articles && Object.keys(this.state.articles).map((key) => {
                         return (
-                            <Article className="newsComp" key={key} articleData={this.state.articles[key]}/>
+                            <Article className="newsComp" key={key} id={key} articleData={this.state.articles[key]}/>
                         )
                     })}
                 </div>
