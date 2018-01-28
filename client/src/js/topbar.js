@@ -11,8 +11,10 @@ import axios from 'axios'
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography'
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton'
+import { CircularProgress } from 'material-ui/Progress';
 import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
@@ -35,7 +37,8 @@ class Topbar extends Component {
             appsOpen: false,
             anchorEl: null,
             loginOpen: false,
-            topSitesVisible: true
+            topSitesVisible: true,
+            loading: true,
         }
         this.firebase = base.initializedApp.firebase_;
     }
@@ -46,12 +49,12 @@ class Topbar extends Component {
                 this.props.setUser(user)
 				this.setState({
 					...this.state,
-					loading: false,
+					loading: true,
 				})
 			} else {
 				this.setState({
 					...this.state,
-					loading: false
+					loading: true
 				})
 			}
 		});
@@ -177,22 +180,32 @@ class Topbar extends Component {
         } else if (site === "twitter") {
             provider = new this.firebase.auth.TwitterAuthProvider();
         }
+        this.setState({
+            ...this.state,
+            loading: true
+        })
 
-        this.firebase.auth().signInWithPopup(provider).then(result => {
+        this.firebase.auth().signInWithRedirect(provider);
+
+        this.firebase.auth().getRedirectResult().then(result => {
+            this.setState({
+                ...this.state,
+                loading: true
+            })
             this.props.setUser(result.user)
 
-            axios.get('/api/user', {
-                    headers: {
-                        refreshToken: this.props.user.refreshToken
-                    }
-                })
-                .then(response => {
-                    //console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            this.closeLogin()
+            // axios.get('/api/user', {
+            //         headers: {
+            //             refreshToken: this.props.user.refreshToken
+            //         }
+            //     })
+            //     .then(response => {
+            //         //console.log(response);
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
+            // this.closeLogin()
         })
 
         this.setState({ ...this.state,
@@ -213,6 +226,12 @@ class Topbar extends Component {
     render() {
         return (
             <AppBar position="fixed" className="appBar">
+                <div className={this.state.loading ? "loadingDiv" : "loadingDiv hidden"}>
+                    <div className={this.state.loading ? "loading" : "loading hidden"}>
+                        <CircularProgress color="secondary" className="progress"/>
+                        <Typography component="h2">Logging in...</Typography>
+                    </div>
+                </div>
                 <Toolbar>
                     <div className="left">
                         <a href="https://loving-morse-4f5653.netlify.com/">
