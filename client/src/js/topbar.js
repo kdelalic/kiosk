@@ -27,6 +27,10 @@ import {
     setUser
 } from './redux.js';
 
+import {
+    Link
+} from 'react-router-dom'
+
 class Topbar extends Component {
 
     constructor(props) {
@@ -228,9 +232,10 @@ class Topbar extends Component {
                 }
                 <Toolbar>
                     <div className="left">
-                        <a href="https://loving-morse-4f5653.netlify.com/">
+                        <Link to={'/'}>
                             <img src={Logo} alt="logo" />
-                        </a>
+                        </Link>
+                        
                         {/* <form className="searchBar" onSubmit={this.handleSearch}>
                             <TextField
                                 id="search"
@@ -248,9 +253,11 @@ class Topbar extends Component {
                             <img src={AppsLogo} alt="appsLogo" />
                         </Button>
                         {this.props.user === null ? <div/> : 
-                            <IconButton className="bookmarksButton" aria-label="Menu" onClick={this.props.toggleBookmarks}>
-                                <Bookmark className="bookmarks"/>
-                            </IconButton>
+                            <Link to={'/bookmarks'}>
+                                <IconButton className="bookmarksButton" aria-label="Bookmarks">
+                                    <Bookmark className="bookmarks"/>
+                                </IconButton>
+                            </Link>
                         }
                         <Popover
                             className="popover"

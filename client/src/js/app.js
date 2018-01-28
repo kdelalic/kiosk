@@ -1,10 +1,24 @@
 import React, { Component } from 'react'
 import '../css/app.css'
+
+// Components
 import Topbar from './topbar.js'
 import Content from './content.js'
 import Sidebar from './sidebar.js'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import Reboot from 'material-ui/Reboot';
+import Bookmarks from './bookmarks'
+import CryptoFolio from './cryptofolio'
+
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    Switch,
+    IndexRoute,
+    Redirect
+} from 'react-router-dom'
+
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import Reboot from 'material-ui/Reboot'
 
 const theme = createMuiTheme({
 	palette: {
@@ -13,14 +27,13 @@ const theme = createMuiTheme({
 	},
 });
 
-export class App extends Component {
-
+export default class App extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             source: "all",
-            bookmarksOpen: false
+            sidebar: true
         }
     }
     
@@ -33,28 +46,40 @@ export class App extends Component {
         event.preventDefault()
     }
 
-    toggleBookmarks = event => {
-        event.preventDefault()
-
-        const {bookmarksOpen} = this.state
+    toggleSidebar = () => {
         this.setState({
             ...this.state,
-            bookmarksOpen: !bookmarksOpen
+            sidebar: !this.state.sidebar
         })
     }
 
     render() {
+        const { sidebar } = this.state;
         return (
             <div className="app">
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
-                    <Topbar toggleBookmarks={this.toggleBookmarks}/>
-                    <Sidebar sortBySource={this.sortBySource}/>
-                    <Content source={this.state.source} bookmarksOpen={this.state.bookmarksOpen}/>
+
+                    <Topbar />
+                    {sidebar && <Sidebar sortBySource={this.sortBySource}/>}
+
+                    <Switch>
+                        <Route path="/"
+                            render={() =>
+                                <Content
+                                    source={this.state.source}
+                                    toggleSidebar={this.toggleSidebar}
+                                />
+                            }
+                            exact={true}
+                        />
+
+                        <Route path="/bookmarks" component={Bookmarks} exact={true} />
+
+                        <Route path="/cryptofolio" component={CryptoFolio} exact={true} />
+                    </Switch>
                 </MuiThemeProvider>
             </div>
         )
     }
 }
-
-export default App;
