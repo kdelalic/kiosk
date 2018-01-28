@@ -11,7 +11,6 @@ var jwt = require("jwt-simple");
 var users = require("./users.js");  
 var cfg = require("./config.js"); 
 var auth = require("./auth")(); 
-var shuffle = require('shuffle-array');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

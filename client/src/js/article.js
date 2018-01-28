@@ -99,9 +99,9 @@ class Article extends Component {
                 <Divider />
                 <div className="cardActions">
                     <div className="actionButtons">
-                        <IconButton className={"actionButton bookmark-button" + (this.state.bookmarked ? ' active' : '')} onClick={this.state.bookmarked ? this.unbookmark : this.bookmark} color="primary">
+                        {this.props.user === null ? <div/> : <IconButton className={"actionButton bookmark-button" + (this.state.bookmarked ? ' active' : '')} onClick={this.state.bookmarked ? this.unbookmark : this.bookmark} color="primary">
                             {this.state.bookmarked ? <Bookmark className="actionIcon bookmarkedIcon" /> : <BookmarkO className="actionIcon" />}
-                        </IconButton>
+                        </IconButton>}
                         <IconButton onClick={this.state.shareOpen ? this.closeShare : this.openShare} color="primary">
                             {this.state.shareOpen ? <CloseIcon size={21} className="actionIcon"/> : <ShareIcon size={21} className="actionIcon"/>}
                         </IconButton>

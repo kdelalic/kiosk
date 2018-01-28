@@ -38,11 +38,7 @@
     "redux": "^3.7.2",
     "scrape-meta": "0.0.4",
     "serve-favicon": "~2.4.5",
-<<<<<<< HEAD
-    "shuffle-array": "^1.0.1",
-=======
     "socket.io-client": "^2.0.4",
->>>>>>> 3ee96af65b74b789698b9193640e1af7e2bf5b6a
     "system-sleep": "^1.3.6"
   },
   "scripts": {
