@@ -17,15 +17,26 @@ admin.initializeApp({
   databaseURL: "https://kiosk-f1a66.firebaseio.com"
 });
 
-
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}
 var db = admin.firestore();
 
 /* GET home page. */
 d = {};
-
+sources = ["bitcoin","coindesk"]
 db.getCollections().then(collections => {
 
  for (let c of collections) {
+ 
+    if (sources.contains(c.id)){
+        console.log(c.id)
 	db.collection(c.id).get()
 
     .then((snapshot) => {
@@ -40,6 +51,7 @@ db.getCollections().then(collections => {
     });
   	 
     }
+}
 
 });
 
@@ -53,32 +65,41 @@ router.get("/", function(req, res) {
     });
 });
 
-router.post("/api/user", function(req, res) {  
-    console.log(req.body.uid)
+router.post("/api/user", auth.authenticate() ,function(req, res) {  
+    //console.log(req.headers.refreshToken)
+    admin.auth().verifyIdToken(req.headers.refreshToken)
+  .then(function(decodedToken) {
+    var uid = decodedToken.uid;
+    res.status(200).json(req)
+  }).catch(function(error) {
+    res.status(400).send("Error")
+  });
 });
 
-router.post("/token", function(req, res) {  
-    if (req.body.email && req.body.password) {
-        var email = req.body.email;
-        var password = req.body.password;
-        var user = users.find(function(u) {
-            return u.email === email && u.password === password;
-        });
-        if (user) {
-            var payload = {
-                id: user.id
-            };
-            var token = jwt.encode(payload, cfg.jwtSecret);
-            res.json({
-                token: token
-            });
-        } else {
-            res.sendStatus(401);
-        }
-    } else {
-        res.sendStatus(401);
-    }
-});
+
+
+// router.post("/token", function(req, res) {  
+//     if (req.body.email && req.body.password) {
+//         var email = req.body.email;
+//         var password = req.body.password;
+//         var user = users.find(function(u) {
+//             return u.email === email && u.password === password;
+//         });
+//         if (user) {
+//             var payload = {
+//                 id: user.id
+//             };
+//             var token = jwt.encode(payload, cfg.jwtSecret);
+//             res.json({
+//                 token: token
+//             });
+//         } else {
+//             res.sendStatus(401);
+//         }
+//     } else {
+//         res.sendStatus(401);
+//     }
+// });
 console.log("OKK")
 module.exports = router;
 
