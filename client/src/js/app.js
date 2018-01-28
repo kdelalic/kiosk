@@ -19,17 +19,28 @@ export class App extends Component {
         super(props)
 
         this.state = {
-            source: "all"
+            source: "all",
+            bookmarksOpen: false
         }
     }
-
     
     sortBySource = source => event =>{
         this.setState({
             ...this.state,
-            source: source
+            source: source,
+            bookmarksOpen: false
         })
         event.preventDefault()
+    }
+
+    toggleBookmarks = event => {
+        event.preventDefault()
+
+        const {bookmarksOpen} = this.state
+        this.setState({
+            ...this.state,
+            bookmarksOpen: !bookmarksOpen
+        })
     }
 
     render() {
@@ -37,9 +48,9 @@ export class App extends Component {
             <div className="app">
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
-                    <Topbar />
+                    <Topbar toggleBookmarks={this.toggleBookmarks}/>
                     <Sidebar sortBySource={this.sortBySource}/>
-                    <Content source={this.state.source}/>
+                    <Content source={this.state.source} bookmarksOpen={this.state.bookmarksOpen}/>
                 </MuiThemeProvider>
             </div>
         )

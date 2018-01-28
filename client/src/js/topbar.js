@@ -19,6 +19,7 @@ import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
+import Bookmark from 'react-icons/lib/fa/bookmark'
 import { base } from './firebase.js'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -227,7 +228,6 @@ class Topbar extends Component {
                     <div className="loadingDiv">
                         <div className="loading">
                             <CircularProgress color="secondary" className="progress"/>
-                            <Typography component="h2">Logging in...</Typography>
                         </div>
                     </div> : 
                     <div></div>
@@ -253,6 +253,11 @@ class Topbar extends Component {
                         <Button ref={node => {this.button = node}} onClick={this.openApps} className="appsLogo">
                             <img src={AppsLogo} alt="appsLogo" />
                         </Button>
+                        {this.props.user === null ? <div/> : 
+                            <IconButton className="bookmarksButton" aria-label="Menu" onClick={this.props.toggleBookmarks}>
+                                <Bookmark className="bookmarks"/>
+                            </IconButton>
+                        }
                         <Popover
                             className="popover"
                             open={this.state.appsOpen}

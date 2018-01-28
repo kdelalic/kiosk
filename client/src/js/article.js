@@ -100,21 +100,21 @@ class Article extends Component {
                         </IconButton>
                     </div>
                     <div className={this.state.shareOpen ? "shareButtons" : "shareButtons hideShare"}>
-                        <FacebookShareButton url={articleData.url} title={articleData.title}>
+                        <FacebookShareButton url={articleData.url} quote={articleData.title}>
                             <IconButton className="shareFacebook">
                                 <FacebookIcon/>
                             </IconButton>
                         </FacebookShareButton>
-                        <TwitterShareButton url={articleData.url} title={articleData.title}>
+                        <TwitterShareButton url={articleData.url} quote={articleData.title}>
                             <IconButton className="shareTwitter">
                                 <TwitterIcon/>
                             </IconButton>
                         </TwitterShareButton>
-                        <LinkedinShareButton url={articleData.url} title={articleData.title}>
+                        <LinkedinShareButton url={articleData.url} quote={articleData.title}>
                             <IconButton className="shareLinkedin"><LinkedinIcon/></IconButton>
                         </LinkedinShareButton>
                         {
-                            // <TwitterShareButton url={articleData.url} title={articleData.title}>
+                            // <TwitterShareButton url={articleData.url} quote={articleData.title}>
                             // <IconButton className="shareSlack"><SlackIcon/></IconButton>
                             // </TwitterShareButton>
                         }

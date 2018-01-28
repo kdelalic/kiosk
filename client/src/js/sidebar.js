@@ -27,11 +27,6 @@ class Sidebar extends Component {
                     logo: BitcoinNews,
                     url: "https://news.bitcoin.com/"
                 },
-                "source-3": {
-                    name: "test",
-                    logo: BitcoinNews,
-                    url: "https://news.bitcoin.com/"
-                },
             }
         }
     }

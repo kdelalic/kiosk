@@ -44,15 +44,17 @@ class SideDrawer extends Component {
             <Drawer className="drawer" anchor="right" open={this.state.drawerOpen} onClose={this.props.closeDrawer}>
                 <div className="drawerBody">
                     {this.props.user === null ? <div></div> : 
-                        <div className="userSettings">
-                            <div className="userInfo">
-                                <Avatar alt="Avatar" src={this.props.user.photoURL}/>
-                                <Typography component="h3">{this.props.user.displayName}</Typography>
+                        <div>
+                            <div className="userSettings">
+                                <div className="userInfo">
+                                    <Avatar alt="Avatar" src={this.props.user.photoURL}/>
+                                    <Typography component="h3">{this.props.user.displayName}</Typography>
+                                </div>
+                                <Button className={this.props.user === null ? "loginButton hidden" : "loginButton"} raised color="secondary" onClick={this.props.handleLogout}>Logout</Button>
                             </div>
-                            <Button className={this.props.user === null ? "loginButton hidden" : "loginButton"} raised color="secondary" onClick={this.props.handleLogout}>Logout</Button>
+                            <Divider/>
                         </div>
                     }
-                    <Divider/>
                     <div className="preferences">
                         <Switch
                             color="secondary"
