@@ -49,12 +49,12 @@ class Topbar extends Component {
                 this.props.setUser(user)
 				this.setState({
 					...this.state,
-					loading: true,
+					loading: false,
 				})
 			} else {
 				this.setState({
 					...this.state,
-					loading: true
+					loading: false
 				})
 			}
 		});
@@ -172,6 +172,7 @@ class Topbar extends Component {
     }
 
     handleLogin = site => event => {
+
         var provider = null
         if (site === "facebook") {
             provider = new this.firebase.auth.FacebookAuthProvider();
@@ -180,17 +181,13 @@ class Topbar extends Component {
         } else if (site === "twitter") {
             provider = new this.firebase.auth.TwitterAuthProvider();
         }
-        this.setState({
-            ...this.state,
-            loading: true
-        })
-
+        
         this.firebase.auth().signInWithRedirect(provider);
 
         this.firebase.auth().getRedirectResult().then(result => {
             this.setState({
                 ...this.state,
-                loading: true
+                loading: false
             })
             this.props.setUser(result.user)
 
@@ -226,12 +223,15 @@ class Topbar extends Component {
     render() {
         return (
             <AppBar position="fixed" className="appBar">
-                <div className={this.state.loading ? "loadingDiv" : "loadingDiv hidden"}>
-                    <div className={this.state.loading ? "loading" : "loading hidden"}>
-                        <CircularProgress color="secondary" className="progress"/>
-                        <Typography component="h2">Logging in...</Typography>
-                    </div>
-                </div>
+                {this.state.loading ? 
+                    <div className="loadingDiv">
+                        <div className="loading">
+                            <CircularProgress color="secondary" className="progress"/>
+                            <Typography component="h2">Logging in...</Typography>
+                        </div>
+                    </div> : 
+                    <div></div>
+                }
                 <Toolbar>
                     <div className="left">
                         <a href="https://loving-morse-4f5653.netlify.com/">
