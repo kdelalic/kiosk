@@ -2,8 +2,14 @@ import React, { Component } from 'react'
 import '../css/sidebar.css'
 import Source from './source.js'
 import Button from 'material-ui/Button'
+import All from '../img/all.png'
 import CoinDesk from '../img/coindesk.png'
 import BitcoinNews from '../img/bitcoin.png'
+import Bitcoinist from '../img/bitcoinist.png'
+import Bitmag from '../img/bitmag.png'
+import Blockonomi from '../img/blockonomi.png'
+import Coinmeme from '../img/coinmeme.png'
+import TheBlockchain from '../img/theblockchain.png'
 
 class Sidebar extends Component {
 
@@ -13,8 +19,7 @@ class Sidebar extends Component {
         this.state = {
             defaultSource: {
                 name: "All news",
-                logo: CoinDesk,
-                url: "https://www.coindesk.com/"
+                logo: All,
             },
             sources: {
                 "source-1": {
@@ -25,6 +30,31 @@ class Sidebar extends Component {
                 "source-2": {
                     name: "Bitcoin News",
                     logo: BitcoinNews,
+                    url: "https://news.bitcoin.com/"
+                },
+                "source-3": {
+                    name: "Bitcoinist",
+                    logo: Bitcoinist,
+                    url: "https://news.bitcoin.com/"
+                },
+                "source-4": {
+                    name: "Bitmag",
+                    logo: Bitmag,
+                    url: "https://news.bitcoin.com/"
+                },
+                "source-5": {
+                    name: "Blockonomi",
+                    logo: Blockonomi,
+                    url: "https://news.bitcoin.com/"
+                },
+                "source-6": {
+                    name: "Coinmeme",
+                    logo: Coinmeme,
+                    url: "https://news.bitcoin.com/"
+                },
+                "source-7": {
+                    name: "The Blockchain",
+                    logo: TheBlockchain,
                     url: "https://news.bitcoin.com/"
                 },
             }

@@ -14,6 +14,7 @@ import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
+import Close from 'react-icons/lib/md/close'
 import coins from './coins.json';
 import { LinearProgress } from 'material-ui/Progress';
 import axios from 'axios'
@@ -131,9 +132,7 @@ class AddCoin extends Component {
 		super(props);
 
 		this.state = {
-			value: 'Bitcoin (BTC)',
-			amount: 2,
-			price: 14000,
+			value: '',
 			currency: 'usd',
 			priceType: 'per',
 			date: formatDate(),
@@ -210,7 +209,7 @@ class AddCoin extends Component {
 				<div className="header">
 					<h2>Add a Coin</h2>
 					<IconButton className="closeButton" onClick={this.props.handleClose}>
-						<Icon>close</Icon>
+						<Close />
 					</IconButton>
 				</div>
 				<LinearProgress color="accent" className={this.state.loading ? "" : "hidden"}/>

@@ -46,13 +46,24 @@ class Content extends Component {
         }
     }
 
+    shuffle = sourceArray => {
+        for (var i = 0; i < sourceArray.length - 1; i++) {
+            var j = i + Math.floor(Math.random() * (sourceArray.length - i));
+    
+            var temp = sourceArray[j];
+            sourceArray[j] = sourceArray[i];
+            sourceArray[i] = temp;
+        }
+        return sourceArray;
+    }
+
     componentWillMount() {
         const url = "/api/content"
         axios.get(url)
 			.then(response => {
 				this.setState({
                     ...this.state,
-                    allArticles: response.data
+                    allArticles: this.shuffle(response.data)
 				}, () => {
                     this.changeSort(this.state.source)
                 });
