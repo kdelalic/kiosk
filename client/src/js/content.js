@@ -56,20 +56,25 @@ class Content extends Component {
         return (
             <div className="content">
                 <div className="headline">
-                    <Typography type="headline" component="h2">
-                        {this.state.source === "all" ? "Latest News" : this.state.source}
+                    <Typography type="headline" component="h2" className="content-title">
+                        {this.props.bookmarksOpen ? "Bookmarks" : this.state.source === "all" ? "Latest News" : this.state.source}
                     </Typography>
                 </div>
-                <div className="feed">
-                    {this.state.articles && Object.keys(this.state.articles).map((key) => {
-                        return (
-                            <Article className="newsComp" key={key} articleData={this.state.articles[key]}/>
-                        )
-                    })}
-                </div>
+                {this.props.bookmarksOpen ? 
+                    <div className="bookmarks">
+                    </div>
+                :
+                    <div className="feed">
+                        {this.state.articles && Object.keys(this.state.articles).map((key) => {
+                            return (
+                                <Article className="newsComp" key={key} articleData={this.state.articles[key]}/>
+                            )
+                        })}
+                    </div>
+                }
             </div>
         )
     }
 }
 
-export default Content
+export default Content;
