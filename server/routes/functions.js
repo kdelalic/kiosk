@@ -430,13 +430,7 @@ function bitcoinist(){
     }
 }
 
-bitcoinist()
-bitcoin()
-bitmag()
-theblockchain()
-coindesk()
-blockonomi()
-coinmeme()
+
 console.log("Okai")
 //blockonomi()
 

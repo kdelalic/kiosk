@@ -20,12 +20,16 @@ import Avatar from 'material-ui/Avatar';
 import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
 import Bookmark from 'react-icons/lib/fa/bookmark'
-import { base } from './firebase.js'
+import { base, firestore } from './firebase.js'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     setUser
 } from './redux.js';
+
+import {
+    Link
+} from 'react-router-dom'
 
 class Topbar extends Component {
 
@@ -47,11 +51,22 @@ class Topbar extends Component {
     componentWillMount() {
 		this.firebase.auth().onAuthStateChanged( (user) => {
 			if (user) {
+                firestore.collection("users").doc(user.uid).set({
+                    bookmarks: {
+                        
+                    }
+                }, { merge: true }).then( () => {
+                    console.log("Document successfully written!");
+                })
+                .catch( error => {
+                    console.error("Error writing document: ", error);
+                });
+                
                 this.props.setUser(user)
 				this.setState({
 					...this.state,
 					loading: false,
-				})
+                })
 			} else {
 				this.setState({
 					...this.state,
@@ -133,8 +148,6 @@ class Topbar extends Component {
         this.setState({
             ...this.state,
             topSitesVisible: checked
-        }, () => {
-            console.log(this.state.topSitesVisible)
         })
         event.preventDefault()
     }
@@ -186,29 +199,14 @@ class Topbar extends Component {
         this.firebase.auth().signInWithRedirect(provider);
 
         this.firebase.auth().getRedirectResult().then(result => {
+
             this.setState({
                 ...this.state,
                 loading: false
             })
+
             this.props.setUser(result.user)
-
-            // axios.get('/api/user', {
-            //         headers: {
-            //             refreshToken: this.props.user.refreshToken
-            //         }
-            //     })
-            //     .then(response => {
-            //         //console.log(response);
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
-            // this.closeLogin()
         })
-
-        this.setState({ ...this.state,
-            anchorEl: null
-        });
         event.preventDefault();
     };
 
@@ -234,9 +232,10 @@ class Topbar extends Component {
                 }
                 <Toolbar>
                     <div className="left">
-                        <a href="https://loving-morse-4f5653.netlify.com/">
+                        <Link to={'/'}>
                             <img src={Logo} alt="logo" />
-                        </a>
+                        </Link>
+                        
                         {/* <form className="searchBar" onSubmit={this.handleSearch}>
                             <TextField
                                 id="search"
@@ -254,9 +253,11 @@ class Topbar extends Component {
                             <img src={AppsLogo} alt="appsLogo" />
                         </Button>
                         {this.props.user === null ? <div/> : 
-                            <IconButton className="bookmarksButton" aria-label="Menu" onClick={this.props.toggleBookmarks}>
-                                <Bookmark className="bookmarks"/>
-                            </IconButton>
+                            <Link to={'/bookmarks'}>
+                                <IconButton className="bookmarksButton" aria-label="Bookmarks">
+                                    <Bookmark className="bookmarks"/>
+                                </IconButton>
+                            </Link>
                         }
                         <Popover
                             className="popover"
