@@ -130,6 +130,10 @@
     margin: 3px;
 }
 
+.bookmarkedIcon {
+    color: #745fb5;
+}
+
 .hideShare {
     opacity: 0;
     transition: all 0.25s;

@@ -45,6 +45,8 @@
     height: 40px;
     width: 40px;
     margin: 12px;
+    box-shadow: 0 0 15px rgb(235, 235, 235);
+    border-radius: 50%;
 }
 
 .sourceName {

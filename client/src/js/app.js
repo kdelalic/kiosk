@@ -9,12 +9,8 @@ import Bookmarks from './bookmarks'
 import CryptoFolio from './cryptofolio'
 
 import {
-    BrowserRouter as Router,
     Route,
-    Link,
-    Switch,
-    IndexRoute,
-    Redirect
+    Switch
 } from 'react-router-dom'
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'

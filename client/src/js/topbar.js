@@ -11,13 +11,10 @@ import axios from 'axios'
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography'
-import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton'
 import { CircularProgress } from 'material-ui/Progress';
 import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
-import SearchIcon from 'react-icons/lib/md/search';
 import More from 'react-icons/lib/md/more-vert';
 import Bookmark from 'react-icons/lib/fa/bookmark'
 import { base, firestore } from './firebase.js'
