@@ -5,5 +5,5 @@
 
 .hidden {
     opacity: 0!important;
-    z-index: -1;
+    z-index: -1!important;
 }

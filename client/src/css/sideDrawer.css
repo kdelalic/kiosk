@@ -13,7 +13,7 @@
 
 .userInfo {
     display: flex;
-    -ms-flex-direction: row;
+    flex-direction: row;
     align-items: center;
 }
 
