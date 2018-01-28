@@ -1,0 +1,30 @@
+.cryptofolio-progress {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 30px;
+}
+
+.cards {
+	margin-bottom: 30px;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.cards .stat {
+	margin: 0 5px;
+}
+
+.cards .stat .stat-content {
+	padding: 10px 20px;
+}
+
+.cards .stat h1, .cryptofolio-progress .stat h2 {
+	font-weight: 300;
+	text-align: center;
+}
+
