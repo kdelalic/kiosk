@@ -53,7 +53,7 @@ class Topbar extends Component {
                         
                     }
                 }, { merge: true }).then( () => {
-                    console.log("Document successfully written!");
+                    
                 })
                 .catch( error => {
                     console.error("Error writing document: ", error);
