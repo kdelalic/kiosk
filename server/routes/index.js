@@ -26,76 +26,104 @@ Array.prototype.contains = function(obj) {
     }
     return false;
 }
+
+function shuffle(originalArray) {
+    var array = [].concat(originalArray);
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
 var db = admin.firestore();
 
 /* GET home page. */
-d = {};
-a =
+// d = {};
+// sources = ["bitcoinist","bitcoin","bitmag","theblockchain","coindesk","blockonomi","coinmeme"]
+// db.getCollections().then(collections => {
+
+//  //for (let c of collections) {
+ 
+//     // if (sources.contains(collections.id)){
+//     //     console.log(c.id)
+//     db
+//         .collection("articles")
+//         //.orderBy('date-a')
+//         .limit(20)
+//         .offset(20)
+//         .get()
+
+//     .then((snapshot) => {
+//         snapshot.forEach((doc) => {
+//         	var i = {}
+//             d[doc.id] = doc.data()
+//         });
+           
+//     })
+//     .catch((err) => {
+//         console.log('Error getting documents', err);
+//     });
+  	 
+    
+// //}
+
+// });
+
+router.get('/api/content', function(req, res, next) {
+    d = {};
+    var currentPage = 1
+    
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    console.log(currentPage)
 sources = ["bitcoinist","bitcoin","bitmag","theblockchain","coindesk","blockonomi","coinmeme"]
 db.getCollections().then(collections => {
 
- for (let c of collections) {
- 
-    if (sources.contains(c.id)){
-        console.log(c.id)
-	db.collection(c.id).get()
+    db
+        .collection("articles")
+        .limit(20)
+        .offset(currentPage*20)
+        .get()
 
     .then((snapshot) => {
         snapshot.forEach((doc) => {
         	var i = {}
             d[doc.id] = doc.data()
         });
-           
+
+    var k = Object.keys(d)
+    
+    var sk = shuffle(k)
+    fd = {}
+    for (var i = 0; i < sk.length; i++){
+        fd[sk[i]] = d[sk[i]]
+    }
+
+
+        res.status(200).json(fd);
     })
     .catch((err) => {
         console.log('Error getting documents', err);
     });
   	 
-    }
-}
+    
+//}
 
 });
-console.log(d[0])
 
-router.get('/api/content', function(req, res, next) {
-    
-    d = Object.keys(d)
-    .map((key) => ({key, value: d[key]}))
-    .sort((a, b) => b.key.localeCompare(a.key))
-    .reduce((acc, e) => {
-      acc[e.key] = e.value;
-      return acc;
-    }, {});
-//console.log(JSON.stringify(d));
-        pageSize = 8,
-        pageCount = 80/8,
-        currentPage = 1,
-        students = [],
-        studentsArrays = [], 
-        studentsList = [];
 
-    //split list into groups
-    while (students.length > 0) {
-        studentsArrays.push(students.splice(0, pageSize));
-    }
-
-    //set current page if specifed as get variable (eg: /?page=2)
-    if (typeof req.query.page !== 'undefined') {
-        currentPage = +req.query.page;
-    }
-
-    //show list of students from group
-    studentsList = studentsArrays[+currentPage - 1];
-
-    //render index.ejs view file
-    res.json({
-        students: studentsList,
-        pageSize: pageSize,
-        totalStudents: totalStudents,
-        pageCount: pageCount,
-        currentPage: currentPage
-    });
-res.status(200).json(d);
 });
 
 router.get("/", function(req, res) {  
