@@ -8,11 +8,12 @@ import Sidebar from './sidebar.js'
 import Bookmarks from './bookmarks'
 import CryptoFolio from './cryptofolio'
 
-import { base } from './firebase.js'
+import { base, firestore } from './firebase.js'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    setUser
+    setUser,
+    setBookmarks
 } from './redux.js';
 import {
     Route,
@@ -44,9 +45,23 @@ class App extends Component {
     componentWillMount() {
         this.firebase.auth().onAuthStateChanged( user => {
 			if (user) {                
+                firestore.collection("users").doc(user.uid)
+                .get().then( doc => {
+                    if (doc.exists) {
+                        const bookmarks = []
+                        Object.keys(doc.data().bookmarks).filter( key => {
+                            return doc.data().bookmarks[key]
+                        }).map(key => {
+                            bookmarks.push(key)
+                        })
+                        this.props.setBookmarks(bookmarks)
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
                 this.props.setUser(user)
 			}
-		});
+        });
     }
     
     sortBySource = source => event =>{
@@ -97,12 +112,13 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.user,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => {
     return {
-        setUser: bindActionCreators(setUser, dispatch)
+        setUser: bindActionCreators(setUser, dispatch),
+        setBookmarks: bindActionCreators(setBookmarks, dispatch)
     };
 };
 

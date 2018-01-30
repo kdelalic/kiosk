@@ -71,10 +71,12 @@ class Article extends Component {
             ...this.state,
             bookmarked: true
         })
-        // firestore.collection("users").doc(this.props.user.uid).collection("bookmarks").add({ articleID: this.props.id})
         firestore.collection("users").doc(this.props.user.uid).set({
-            bookmarks: this.props.id
+            bookmarks: {
+                [this.props.id] : true
+            }
         }, {merge: true})
+        this.props.addBookmark(this.props.id)
     }
 
     unbookmark = event => {
@@ -83,7 +85,12 @@ class Article extends Component {
             ...this.state,
             bookmarked: false
         })
-        firestore.collection("users").doc(this.props.user.uid).collection("bookmarks").doc(this.props.id).delete()
+        firestore.collection("users").doc(this.props.user.uid).set({
+            bookmarks: {
+                [this.props.id] : false
+            }
+        }, {merge: true})
+        this.props.removeBookmark(this.props.id)
     }
 
     render() {

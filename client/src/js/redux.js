@@ -40,8 +40,8 @@ export const bookmarks = (state = [], action) => {
         case 'ADD_BOOKMARK':
             return [...state, action.bookmark]
         case 'REMOVE_BOOKMARK':
-            return [state.slice(0, state.indexOf(action.bookmark)),
-                state.slice(state.indexOf(action.bookmark) + 1)
+            return [...state.slice(0, state.indexOf(action.bookmark)),
+                ...state.slice(state.indexOf(action.bookmark) + 1)
                 ]
         default:
             return state

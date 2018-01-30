@@ -6,11 +6,13 @@ import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 
+import {firestore} from './firebase.js'
+
 import {
     Link
 } from 'react-router-dom'
 
-import {firestore} from './firebase.js'
+// import {firestore} from './firebase.js'
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -27,29 +29,21 @@ class Bookmarks extends Component {
         }
     }
 
-    componentWillMount() {
-        const docRef = firestore.collection("users").doc(this.props.user.uid);
+    componentDidMount() {
+        //get uids from somewhere
+        const articleIDs = this.props.bookmarks
 
-        docRef.get().then(function(doc) {
-            if (doc.exists) {
-                console.log(doc.data());
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-    }
+        var docRef = firestore.collection("articles")
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.user !== null){
-            const docRef = firestore.collection("users").doc(nextProps.user.uid).collection("bookmarks")
+        articleIDs.forEach(uid => {
+            docRef.where("uid", "==", uid) 
+        })
 
-            docRef.get().then(function(querySnapshot) {
-                console.log(querySnapshot)
-            });
-        }
+        docRef.get().then(articles => {
+            articles.forEach(article => {
+                console.log("Article: ", article.id)
+            })
+        })
     }
 
     render() {
@@ -86,6 +80,7 @@ class Bookmarks extends Component {
 
 const mapStateToProps = state => ({
     user: state.user,
+    bookmarks: state.bookmarks
 });
 
 const mapDispatchToProps = dispatch => {
