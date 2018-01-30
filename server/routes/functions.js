@@ -69,7 +69,7 @@ function coindesk(){
                 "date-a" : metadata["date"]
                 }
                 //console.log(articles)  
-                db.collection("coindesk").add(articles)
+                db.collection("articles").add(articles)
             }).catch((err) => console.error("Fail"))
   
         } 
@@ -83,7 +83,7 @@ function coindesk(){
 
 function bitcoin(){
 
-    request("https://news.bitcoin.com/", function(error, response, body) {
+request("https://news.bitcoin.com/", function(error, response, body) {
   if(error) { return  console.error('There was an error!'); }
 
   var $ = cheerio.load(body);
@@ -105,7 +105,7 @@ function bitcoin(){
                 "date-a" : metadata["date"]
             }
             //console.log(articles)
-            db.collection("bitcoin").add(articles)
+            db.collection("articles").add(articles)
         }).catch((err) => console.error("Fail"))
   });
 });
@@ -138,7 +138,7 @@ function blockonomi(){
                   "date-a" : metadata["date"]
               }
               //console.log(articles)
-              db.collection("blockonomi").add(articles)
+              db.collection("articles").add(articles)
           }).catch((err) => console.error("Fail"))
     });
       });
@@ -170,7 +170,7 @@ function cointele(){
                         "date-a" : metadata["date"]
                     }
                     console.log(articles)
-                    //db.collection("bitcoin").add(articles)
+                    db.collection("articles").add(articles)
                 }).catch((err) => console.error("Fail"))
           });
         });
@@ -207,7 +207,7 @@ function coinmeme(){
                             "image" : metadata["image"],
                             "date-a" : metadata["date"]
                         }
-                    db.collection("coinmeme").add(articles)
+                    db.collection("articles").add(articles)
                 }
                 
                 
@@ -304,7 +304,7 @@ function theblockchain(){
                   "date-a" : metadata["date"]
               }
               //console.log(articles)
-              db.collection("theblockchain").add(articles)
+              db.collection("articles").add(articles)
           }).catch((err) => console.error("Fail"))
     });
       });
@@ -390,7 +390,7 @@ function bitmag(){
                 "date-a" : metadata["date"]
             }
             //console.log(articles)
-            db.collection("bitmag").add(articles)
+            db.collection("articles").add(articles)
         }).catch((err) => console.error("Fail"))
   });
 });
@@ -423,14 +423,20 @@ function bitcoinist(){
                   "date-a" : metadata["date"]
               }
               console.log(articles)
-              db.collection("bitcoinist").add(articles)
+              db.collection("articles").add(articles)
           }).catch((err) => console.error("Fail"))
     });
       });
     }
 }
 
-
+bitcoinist()
+bitcoin()
+bitmag()
+theblockchain()
+coindesk()
+blockonomi()
+coinmeme()
 console.log("Okai")
 //blockonomi()
 

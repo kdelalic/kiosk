@@ -30,6 +30,7 @@ var db = admin.firestore();
 
 /* GET home page. */
 d = {};
+a =
 sources = ["bitcoinist","bitcoin","bitmag","theblockchain","coindesk","blockonomi","coinmeme"]
 db.getCollections().then(collections => {
 
@@ -54,8 +55,10 @@ db.getCollections().then(collections => {
 }
 
 });
+console.log(d[0])
 
 router.get('/api/content', function(req, res, next) {
+    
     d = Object.keys(d)
     .map((key) => ({key, value: d[key]}))
     .sort((a, b) => b.key.localeCompare(a.key))
@@ -64,6 +67,34 @@ router.get('/api/content', function(req, res, next) {
       return acc;
     }, {});
 //console.log(JSON.stringify(d));
+        pageSize = 8,
+        pageCount = 80/8,
+        currentPage = 1,
+        students = [],
+        studentsArrays = [], 
+        studentsList = [];
+
+    //split list into groups
+    while (students.length > 0) {
+        studentsArrays.push(students.splice(0, pageSize));
+    }
+
+    //set current page if specifed as get variable (eg: /?page=2)
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+
+    //show list of students from group
+    studentsList = studentsArrays[+currentPage - 1];
+
+    //render index.ejs view file
+    res.json({
+        students: studentsList,
+        pageSize: pageSize,
+        totalStudents: totalStudents,
+        pageCount: pageCount,
+        currentPage: currentPage
+    });
 res.status(200).json(d);
 });
 
