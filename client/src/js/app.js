@@ -8,6 +8,12 @@ import Sidebar from './sidebar.js'
 import Bookmarks from './bookmarks'
 import CryptoFolio from './cryptofolio'
 
+import { base } from './firebase.js'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+    setUser
+} from './redux.js';
 import {
     Route,
     Switch
@@ -23,7 +29,7 @@ const theme = createMuiTheme({
 	},
 });
 
-export default class App extends Component {
+class App extends Component {
     constructor(props) {
         super(props)
 
@@ -31,6 +37,16 @@ export default class App extends Component {
             source: "all",
             sidebar: true
         }
+
+        this.firebase = base.initializedApp.firebase_;
+    }
+
+    componentWillMount() {
+        this.firebase.auth().onAuthStateChanged( user => {
+			if (user) {                
+                this.props.setUser(user)
+			}
+		});
     }
     
     sortBySource = source => event =>{
@@ -79,3 +95,18 @@ export default class App extends Component {
         )
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.user,
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setUser: bindActionCreators(setUser, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);

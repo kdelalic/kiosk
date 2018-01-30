@@ -17,7 +17,7 @@ import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
 import More from 'react-icons/lib/md/more-vert';
 import Bookmark from 'react-icons/lib/fa/bookmark'
-import { base, firestore } from './firebase.js'
+import { base } from './firebase.js'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -45,33 +45,14 @@ class Topbar extends Component {
         this.firebase = base.initializedApp.firebase_;
     }
 
-    componentWillMount() {
-		this.firebase.auth().onAuthStateChanged( (user) => {
-			if (user) {
-                firestore.collection("users").doc(user.uid).set({
-                    bookmarks: {
-                        
-                    }
-                }, { merge: true }).then( () => {
-                    
-                })
-                .catch( error => {
-                    console.error("Error writing document: ", error);
-                });
-                
-                this.props.setUser(user)
-				this.setState({
-					...this.state,
-					loading: false,
-                })
-			} else {
-				this.setState({
-					...this.state,
-					loading: false
-				})
-			}
-		});
-	}
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.user) {
+            this.setState({
+                ...this.state,
+                loading: false,
+            })
+        }
+    }
 
     componentDidMount(){
         // chrome.topSites.get(topSites => {

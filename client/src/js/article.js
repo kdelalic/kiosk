@@ -17,6 +17,12 @@ import Bookmark from 'react-icons/lib/fa/bookmark'
 import {firestore} from './firebase.js'
 
 import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+    setBookmarks,
+    addBookmark,
+    removeBookmark
+} from './redux.js';
 import {
     ShareButtons,
 } from 'react-share';
@@ -39,8 +45,6 @@ class Article extends Component {
     }
 
     componentWillMount() {
-        
-        
         this.setState({
             ...this.state,
             articleData: this.props.articleData
@@ -67,25 +71,10 @@ class Article extends Component {
             ...this.state,
             bookmarked: true
         })
+        // firestore.collection("users").doc(this.props.user.uid).collection("bookmarks").add({ articleID: this.props.id})
         firestore.collection("users").doc(this.props.user.uid).set({
-            bookmarks: {
-                [this.props.id]: this.state.articleData
-            }
-        }, { merge: true })
-
-        const docRef = firestore.collection("users").doc(this.props.user.uid);
-
-        docRef.get().then(function(doc) {
-            if (doc.exists) {
-                console.log("Document data:", doc.data());
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-
+            bookmarks: this.props.id
+        }, {merge: true})
     }
 
     unbookmark = event => {
@@ -94,11 +83,7 @@ class Article extends Component {
             ...this.state,
             bookmarked: false
         })
-        // firestore.collection("users").doc(this.props.user.uid).update({
-        //     bookmarks: {
-        //         [this.props.id]: firestore.FieldValue.delete()
-        //     }
-        // })
+        firestore.collection("users").doc(this.props.user.uid).collection("bookmarks").doc(this.props.id).delete()
     }
 
     render() {
@@ -149,8 +134,18 @@ class Article extends Component {
 
 const mapStateToProps = state => ({
     user: state.user,
+    bookmarks: state.bookmarks
 });
 
+const mapDispatchToProps = dispatch => {
+    return {
+        setBookmarks: bindActionCreators(setBookmarks, dispatch),
+        addBookmark: bindActionCreators(addBookmark, dispatch),
+        removeBookmark: bindActionCreators(removeBookmark, dispatch)
+    };
+};
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Article);

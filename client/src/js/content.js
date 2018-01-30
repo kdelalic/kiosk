@@ -20,7 +20,7 @@ class Content extends Component {
 
         this.state = {
             source: "all",
-            cryptofolio: false
+            page: 1
         }
     }
 
@@ -35,6 +35,60 @@ class Content extends Component {
         }
     }
 
+    componentDidMount() {
+        window.addEventListener("scroll", this.handleScroll);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+            this.setState({
+                page: this.state.page + 1
+            }, () => {
+                const url = "/api/content/?page=" + this.state.page
+                axios.get(url)
+                .then(response => {
+                    this.setState({
+                        ...this.state,
+                        allArticles: {
+                            ...this.state.allArticles,
+                            ...response.data
+                        }
+                    }, () => {
+                        this.changeSort(this.state.source)
+                    });
+                })
+                .catch(err => {
+                    console.log(err)
+                });
+            })
+        }
+    }
+
+    componentWillMount() {
+        const url = "/api/content/?page=" + this.state.page
+        axios.get(url)
+        .then(response => {
+            this.setState({
+                ...this.state,
+                allArticles: response.data
+            }, () => {
+                this.changeSort(this.state.source)
+            });
+        })
+        .catch(err => {
+            console.log(err)
+        });
+    }
+
     changeSort = source => {
         if(source === "all") {
             this.setState({
@@ -46,32 +100,8 @@ class Content extends Component {
         }
     }
 
-    componentWillMount() {
-        const url = "/api/content"
-        axios.get(url)
-			.then(response => {
-				this.setState({
-                    ...this.state,
-                    allArticles: response.data
-				}, () => {
-                    this.changeSort(this.state.source)
-                });
-			})
-			.catch(err => {
-				console.log(err)
-			});
-    }
-
     render() {
-        const { cryptofolio } = this.state;
-        if (cryptofolio) return (
-            <div className="content">
-                <Typography type="headline" component="h2" className="content-title">
-                    CryptoFolio
-                </Typography>
-            </div>
-        )
-        else return (
+        return (
             <div className="content">
                 <Grid container spacing={24} className="headline">
                     <Grid item md={6}>
