@@ -39,6 +39,8 @@ class Article extends Component {
     }
 
     componentWillMount() {
+        
+        
         this.setState({
             ...this.state,
             articleData: this.props.articleData
@@ -70,6 +72,19 @@ class Article extends Component {
                 [this.props.id]: this.state.articleData
             }
         }, { merge: true })
+
+        const docRef = firestore.collection("users").doc(this.props.user.uid);
+
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
 
     }
 
