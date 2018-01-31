@@ -107,6 +107,7 @@
 
 .actionButtons button.bookmark-button {
     background: #f2f6f9;
+    transition: background-color 333ms ease-in-out;
 }
 
 .actionIcon {
@@ -130,8 +131,15 @@
     margin: 3px;
 }
 
+.bookmarked {
+    background-color: #745fb5!important;
+    -webkit-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
+}
+
 .bookmarkedIcon {
-    color: #745fb5;
+    color: white;
 }
 
 .hideShare {

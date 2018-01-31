@@ -7,19 +7,40 @@ export const setUser = user => ({
     user
 })
 
-export const setBookmarks = bookmarks => ({
+export const setBookmarkIDs = bookmarkIDs => ({
+    type: 'SET_BOOKMARK_IDS',
+    bookmarkIDs
+})
+
+export const addBookmarkID = bookmarkID => ({
+    type: 'ADD_BOOKMARK_ID',
+    bookmarkID
+})
+
+export const removeBookmarkID = bookmarkID => ({
+    type: 'REMOVE_BOOKMARK_ID',
+    bookmarkID
+})
+
+export const setBookmarks = bookmark => ({
     type: 'SET_BOOKMARKS',
     bookmarks
 })
 
-export const addBookmark = bookmark => ({
+export const addBookmark = (key, bookmark) => ({
     type: 'ADD_BOOKMARK',
+    key,
     bookmark
 })
 
-export const removeBookmark = bookmark => ({
+export const removeBookmark = key => ({
     type: 'REMOVE_BOOKMARK',
-    bookmark
+    key
+})
+
+export const setLoaded = loaded => ({
+    type: 'SET_LOADED',
+    loaded
 })
 
 //reducers
@@ -33,16 +54,48 @@ export const user = (state = {}, action) => {
     }
 }
 
-export const bookmarks = (state = [], action) => {
+export const bookmarkIDs = (state = {}, action) => {
     switch (action.type) {
-        case 'SET_BOOKMARKS':
+        case 'SET_BOOKMARK_IDS':
+            return action.bookmarkIDs
+        case 'ADD_BOOKMARK_ID':
+            return {
+                ...state,
+                [action.bookmarkID]: true
+            }
+        case 'REMOVE_BOOKMARK_ID':
+            return {
+                ...state,
+                [action.bookmarkID]: false
+            }
+        default:
+            return state
+    }
+}
+
+export const bookmarks = (state = {}, action) => {
+    switch (action.type) {
+        case 'SET_BOOKMARK':
             return action.bookmarks
         case 'ADD_BOOKMARK':
-            return [...state, action.bookmark]
+            return {
+                ...state,
+                [action.key]: action.bookmark
+            }
         case 'REMOVE_BOOKMARK':
-            return [...state.slice(0, state.indexOf(action.bookmark)),
-                ...state.slice(state.indexOf(action.bookmark) + 1)
-                ]
+            return {
+                ...state,
+                [action.key]: null
+            }
+        default:
+            return state
+    }
+}
+
+export const loaded = (state = {}, action) => {
+    switch (action.type) {
+        case 'SET_LOADED':
+            return action.loaded
         default:
             return state
     }
@@ -50,12 +103,14 @@ export const bookmarks = (state = [], action) => {
 
 const rootReducer = combineReducers({
     user,
-    bookmarks
+    bookmarkIDs,
+    bookmarks,
+    loaded
 });
 
 export default rootReducer
 
-export function configureStore(initialState = {user: null, bookmarks: []}) {
+export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, loaded: false}) {
     const store = createStore(rootReducer, initialState);
     return store;
 }

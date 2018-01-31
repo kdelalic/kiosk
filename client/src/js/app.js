@@ -13,7 +13,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     setUser,
-    setBookmarks
+    setBookmarkIDs,
+    addBookmark,
+    setLoaded
 } from './redux.js';
 import {
     Route,
@@ -48,13 +50,20 @@ class App extends Component {
                 firestore.collection("users").doc(user.uid)
                 .get().then( doc => {
                     if (doc.exists) {
-                        const bookmarks = []
+                        var bookmarkIDs = {}
                         Object.keys(doc.data().bookmarks).filter( key => {
                             return doc.data().bookmarks[key]
                         }).map(key => {
-                            bookmarks.push(key)
+                            bookmarkIDs = {
+                                ...bookmarkIDs,
+                                [key]: true
+                            }
+                            return true
                         })
-                        this.props.setBookmarks(bookmarks)
+                        this.props.setBookmarkIDs(bookmarkIDs)
+                        if(!this.props.loaded) {
+                            setTimeout(this.loadBookmarks, 2000)
+                        }
                     }
                 }).catch(function(error) {
                     console.log("Error getting document:", error);
@@ -63,8 +72,25 @@ class App extends Component {
 			}
         });
     }
+
+    loadBookmarks = () => {
+        if(!this.props.loaded){
+            const articleIDs = this.props.bookmarkIDs
+            const collection = firestore.collection("articles")
+
+            Object.keys(articleIDs).forEach(id => {
+                collection.where("id", "==", id)
+                .get().then(article => {
+                    article.forEach(doc => {
+                        this.props.addBookmark(doc.id, doc.data())
+                    })
+                })
+            })
+            this.props.setLoaded(true)
+        }
+    }
     
-    sortBySource = source => event =>{
+    sortBySource = source => event => {
         this.setState({
             ...this.state,
             source: source,
@@ -112,13 +138,17 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.user
+    user: state.user,
+    bookmarkIDs: state.bookmarkIDs,
+    loaded: state.loaded
 });
 
 const mapDispatchToProps = dispatch => {
     return {
         setUser: bindActionCreators(setUser, dispatch),
-        setBookmarks: bindActionCreators(setBookmarks, dispatch)
+        setBookmarkIDs: bindActionCreators(setBookmarkIDs, dispatch),
+        addBookmark: bindActionCreators(addBookmark, dispatch),
+        setLoaded: bindActionCreators(setLoaded, dispatch)
     };
 };
 

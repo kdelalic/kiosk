@@ -16,8 +16,8 @@ import {
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    setBookmarks,
-    addBookmark
+    addBookmark,
+    setLoaded
 } from './redux.js';
 
 class Bookmarks extends Component {
@@ -25,25 +25,25 @@ class Bookmarks extends Component {
         super(props)
 
         this.state = {
-            
+
         }
     }
 
     componentDidMount() {
-        //get uids from somewhere
-        const articleIDs = this.props.bookmarks
+        if(!this.props.loaded) {
+            const articleIDs = this.props.bookmarkIDs
+            const collection = firestore.collection("articles")
 
-        var docRef = firestore.collection("articles")
-
-        articleIDs.forEach(uid => {
-            docRef.where("uid", "==", uid) 
-        })
-
-        docRef.get().then(articles => {
-            articles.forEach(article => {
-                console.log("Article: ", article.id)
+            Object.keys(articleIDs).forEach(id => {
+                collection.where("id", "==", id)
+                .get().then(article => {
+                    article.forEach(doc => {
+                        this.props.addBookmark(doc.id, doc.data())
+                    })
+                })
             })
-        })
+            this.props.setLoaded(true)
+        }
     }
 
     render() {
@@ -66,9 +66,11 @@ class Bookmarks extends Component {
                 </Grid>
                 <div className="feed">
                     {
-                        this.state.bookmarks !== undefined && Object.keys(this.state.bookmarks).map((key) => {
+                        this.props.loaded && Object.keys(this.props.bookmarks)
+                        .filter(key => this.props.bookmarks[key])
+                        .map((key) => {
                             return (
-                                <Article key={key} id={key} articleData={this.state.bookmarks[key]}/>
+                                <Article key={key} id={key} articleData={this.props.bookmarks[key]} isBookmark={true}/>
                             )
                         })
                     }
@@ -80,13 +82,15 @@ class Bookmarks extends Component {
 
 const mapStateToProps = state => ({
     user: state.user,
-    bookmarks: state.bookmarks
+    bookmarkIDs: state.bookmarkIDs,
+    bookmarks: state.bookmarks,
+    loaded: state.loaded
 });
 
 const mapDispatchToProps = dispatch => {
     return {
-        setBookmarks: bindActionCreators(setBookmarks, dispatch),
-        addBookmark: bindActionCreators(addBookmark, dispatch)
+        addBookmark: bindActionCreators(addBookmark, dispatch),
+        setLoaded: bindActionCreators(setLoaded, dispatch)
     };
 };
 
