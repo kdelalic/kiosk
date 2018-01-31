@@ -65,7 +65,7 @@ class Bookmarks extends Component {
                     </Grid>
                 </Grid>
                 <div className="feed">
-                    {
+                    {   
                         this.props.loaded && Object.keys(this.props.bookmarks)
                         .filter(key => this.props.bookmarks[key])
                         .map((key) => {

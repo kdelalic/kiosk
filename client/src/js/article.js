@@ -102,7 +102,7 @@ class Article extends Component {
             }
         }, {merge: true})
         this.props.removeBookmarkID(this.props.id)
-        this.props.removeBookmark(this.props.ID)
+        this.props.removeBookmark(this.props.id)
     }
 
     render() {
