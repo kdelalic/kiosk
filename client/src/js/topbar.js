@@ -200,13 +200,14 @@ class Topbar extends Component {
     render() {
         return (
             <AppBar position="fixed" className="appBar">
-                {this.state.loading ? 
-                    <div className="loadingDiv">
-                        <div className="loading">
-                            <CircularProgress color="secondary" className="progress"/>
-                        </div>
-                    </div> : 
-                    <div></div>
+                {
+                    // this.state.loading ? 
+                    // <div className="loadingDiv">
+                    //     <div className="loading">
+                    //         <CircularProgress color="secondary" className="progress"/>
+                    //     </div>
+                    // </div> : 
+                    // <div></div>
                 }
                 <Toolbar>
                     <div className="left">
