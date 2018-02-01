@@ -10,6 +10,8 @@ import Button from 'material-ui/Button'
 import axios from 'axios'
 import { firestore } from './firebase.js'
 
+import {firestore} from './firebase.js'
+
 import {
     Link
 } from 'react-router-dom'
@@ -20,8 +22,14 @@ class Content extends Component {
         super(props)
 
         this.state = {
+<<<<<<< HEAD
             source: "content",
             page: 1
+=======
+            source: "all",
+            page: 1,
+            allArticles: []
+>>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
         }
     }
 
@@ -54,6 +62,7 @@ class Content extends Component {
             this.setState({
                 page: this.state.page + 1
             }, () => {
+<<<<<<< HEAD
                 const url = "/api/" + this.state.source + "/?page=" + this.state.page
                 axios.get(url)
                 .then(response => {
@@ -68,11 +77,15 @@ class Content extends Component {
                 .catch(err => {
                     console.log(err)
                 });
+=======
+                this._populate();
+>>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
             })
         }
     }
 
     componentWillMount() {
+<<<<<<< HEAD
         const url = "/api/content/?page=" + this.state.page
         axios.get(url)
         .then(response => {
@@ -84,6 +97,39 @@ class Content extends Component {
         .catch(err => {
             console.log(err)
         });
+=======
+        this._populate();
+    }
+
+    _populate = () => {
+        const { allArticles } = this.state
+        const collection = firestore.collection("articles")
+        let startAt = null;
+
+        console.log("POPULATING")        
+
+        if (allArticles && allArticles.length > 0) {
+            startAt = allArticles[allArticles.length - 1]['date-a']
+        }
+        collection
+            .limit(20)
+            .orderBy("date-a")
+            .startAt(startAt)
+            .get()
+            .then(articles => {
+                const articlesData = []
+                articles.forEach(doc => {
+                    articlesData.push(doc.data())
+                })
+                
+                this.setState({
+                    ...this.state,
+                    allArticles: this.state.allArticles.concat(articlesData)
+                }, () => {
+                    this.changeSort(this.state.source)
+                });
+            })
+>>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
     }
 
     changeSort = source => {
