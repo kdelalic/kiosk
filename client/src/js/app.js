@@ -118,7 +118,7 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
                     {
-                        this.props.loaded ? 
+                        this.props.user ? 
                         <div /> :
                         <div className="loadingDiv">
                             <div className="loading">
