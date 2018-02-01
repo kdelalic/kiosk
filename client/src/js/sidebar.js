@@ -3,13 +3,8 @@ import '../css/sidebar.css'
 import Source from './source.js'
 import Button from 'material-ui/Button'
 import All from '../img/all.png'
-import CoinDesk from '../img/coindesk.png'
-import BitcoinNews from '../img/bitcoin.png'
-import Bitcoinist from '../img/bitcoinist.png'
-import Bitmag from '../img/bitmag.png'
-import Blockonomi from '../img/blockonomi.png'
-import Coinmeme from '../img/coinmeme.png'
-import TheBlockchain from '../img/theblockchain.png'
+
+import {firestore} from './firebase.js'
 
 class Sidebar extends Component {
 
@@ -18,88 +13,37 @@ class Sidebar extends Component {
 
         this.state = {
             defaultSource: {
-                name: "All news",
+                name: "Latest News",
                 logo: All,
             },
             sources: {
-                "CoinDesk": {
-                    name: "CoinDesk",
-                    logo: CoinDesk,
-                    url: "https://www.coindesk.com/"
-                },
-                "coinmeme": {
-                    name: "Coinmeme",
-                    logo: Coinmeme,
-                    url: "https://coinmeme.io/"
-                },
-                "Bitcoinist": {
-                    name: "Bitcoinist",
-                    logo: Bitcoinist,
-                    url: "http://bitcoinist.com/"
-                },
-                "Bitcoin Magazine": {
-                    name: "Bitcoin Magazine",
-                    logo: Bitmag,
-                    url: "https://bitcoinmagazine.com/"
-                },
-                "Bitcoin News": {
-                    name: "Bitcoin News",
-                    logo: BitcoinNews,
-                    url: "https://news.bitcoin.com/"
-                },
-                "Blockonomi": {
-                    name: "Blockonomi",
-                    logo: Blockonomi,
-                    url: "https://blockonomi.com/"
-                },
-                "The Blockchain": {
-                    name: "The Blockchain",
-                    logo: TheBlockchain,
-                    url: "http://the-blockchain.com/"
-                },
-                "TechCrunch": {
-                    name: "TechCrunch",
-                    logo: TheBlockchain,
-                    url: "https://techcrunch.com/"
-                },
-                "CCN": {
-                    name: "CryptoCoinNews",
-                    logo: TheBlockchain,
-                    url: "https://www.ccn.com/"
-                },
-                "CNBC": {
-                    name: "CNBC",
-                    logo: TheBlockchain,
-                    url: "https://www.cnbc.com/"
-                },
-                "NYTimes": {
-                    name: "New York Times",
-                    logo: TheBlockchain,
-                    url: "https://www.nytimes.com/"
-                },
-                "Quartz": {
-                    name: "The Blockchain",
-                    logo: TheBlockchain,
-                    url: "https://qz.com/"
-                },
-                "WSJ": {
-                    name: "Wall Street Journal",
-                    logo: TheBlockchain,
-                    url: "https://www.wsj.com/"
-                },
-                "Hacker Noon": {
-                    name: "Hacker Noon",
-                    logo: TheBlockchain,
-                    url: "https://hackernoon.com/"
-                },
+
             }
         }
+    }
+
+    componentDidMount() {
+            firestore.collection("sources")
+            .get()
+            .then(snapshot => {
+                let sources = {}
+                snapshot.forEach(doc => {
+                    sources[doc.id] = doc.data()
+                });
+                this.setState({
+                    ...this.state,
+                    sources: sources
+                })
+            })
+            .catch(err => {
+                console.log('Error getting documents', err);
+            });
     }
 
     render() {
         return (
             <div className="sidebar">
-                <Button onClick={this.props.sortBySource("content")} className="source">
+                <Button onClick={this.props.sortBySource("all")} className="source">
                     <img className="sourceLogo" src={this.state.defaultSource.logo} alt={this.state.defaultSource.name}/>
                     <div className="sourceName">{this.state.defaultSource.name}</div>
                 </Button>

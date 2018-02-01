@@ -30,9 +30,10 @@ class Content extends Component {
         if(nextProps.source !== this.state.source) {
             this.setState({
                 ...this.state,
-                source: nextProps.source
+                source: nextProps.source,
+                articles: null
             }, () => {
-                this.changeSort(this.state.source)
+                this._populate(this.state.source)
             })
         }
     }
@@ -55,65 +56,79 @@ class Content extends Component {
             this.setState({
                 page: this.state.page + 1
             }, () => {
-                this._populate();
+                this._populate(this.state.source);
             })
         }
     }
 
     componentWillMount() {
-        this._populate();
+        this._populate(this.state.source);
     }
 
-    _populate = () => {
-        const { articles } = this.state;
+    _populate = source => {
+        const {articles} = this.state;
         const collection = firestore.collection("articles")
         let startAt = null;
 
-        console.log("POPULATING")        
-
-        if (articles) {
-            const articleKeys = Object.keys(articles);
-            if (articleKeys.length > 0) {
-                startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+        console.log("POPULATING")
+        
+        if (source === "all") {
+            if (articles) {
+                const articleKeys = Object.keys(articles);
+                if (articleKeys.length > 0) {
+                    startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+                }
             }
-        }
-        collection
-            .limit(20)
-            .orderBy("date-a")
-            .startAt(startAt)
-            .get()
-            .then(articlesResponse => {
-                const articlesData = {}
-                articlesResponse.forEach(doc => {
-                    articlesData[doc.id] = doc.data()
+            collection
+                .limit(20)
+                .orderBy("date-a")
+                .startAt(startAt)
+                .get()
+                .then(articlesResponse => {
+                    const articlesData = {}
+                    articlesResponse.forEach(doc => {
+                        articlesData[doc.id] = doc.data()
+                    })
+
+                    this.setState({
+                        ...this.state,
+                        articles: {
+                            ...this.state.articles,
+                            ...articlesData
+                        }
+                    });
                 })
-                
-                this.setState({
-                    ...this.state,
-                    articles: {
-                        ...this.state.articles,
-                        ...articlesData
-                    }
-                });
-            })
+        } else {
+            if (articles) {
+                const articleKeys = Object.keys(articles);
+                if (articleKeys.length > 0) {
+                    startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+                }
+            }
+            collection
+                .where("site", "==", source)
+                .limit(20)
+                .orderBy("date-a")
+                .startAt(startAt)
+                .get()
+                .then(articlesResponse => {
+                    const articlesData = {}
+                    articlesResponse.forEach(doc => {
+                        articlesData[doc.id] = doc.data()
+                    })
+
+                    this.setState({
+                        ...this.state,
+                        articles: {
+                            ...this.state.articles,
+                            ...articlesData
+                        }
+                    });
+                })
+        }
     }
 
     changeSort = source => {
-        var articles = {}
-        firestore.collection("articles")
-        .where("site", "==", source)
-        .get()
-        .then( querySnapshot => {
-            querySnapshot.forEach(article => {
-                articles[article.id] = article.data()
-            })
-            this.setState({
-                ...this.state,
-                articles: articles,
-                source: source,
-                page: 1
-            })
-        })
         
     }
 
