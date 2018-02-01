@@ -10,8 +10,6 @@ import Button from 'material-ui/Button'
 import axios from 'axios'
 import { firestore } from './firebase.js'
 
-import {firestore} from './firebase.js'
-
 import {
     Link
 } from 'react-router-dom'
@@ -22,14 +20,9 @@ class Content extends Component {
         super(props)
 
         this.state = {
-<<<<<<< HEAD
-            source: "content",
-            page: 1
-=======
             source: "all",
             page: 1,
-            allArticles: []
->>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
+            articles: {}
         }
     }
 
@@ -62,74 +55,47 @@ class Content extends Component {
             this.setState({
                 page: this.state.page + 1
             }, () => {
-<<<<<<< HEAD
-                const url = "/api/" + this.state.source + "/?page=" + this.state.page
-                axios.get(url)
-                .then(response => {
-                    this.setState({
-                        ...this.state,
-                        articles: {
-                            ...this.state.articles,
-                            ...response.data
-                        }
-                    });
-                })
-                .catch(err => {
-                    console.log(err)
-                });
-=======
                 this._populate();
->>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
             })
         }
     }
 
     componentWillMount() {
-<<<<<<< HEAD
-        const url = "/api/content/?page=" + this.state.page
-        axios.get(url)
-        .then(response => {
-            this.setState({
-                ...this.state,
-                articles: response.data
-            });
-        })
-        .catch(err => {
-            console.log(err)
-        });
-=======
         this._populate();
     }
 
     _populate = () => {
-        const { allArticles } = this.state
+        const { articles } = this.state;
         const collection = firestore.collection("articles")
         let startAt = null;
 
         console.log("POPULATING")        
 
-        if (allArticles && allArticles.length > 0) {
-            startAt = allArticles[allArticles.length - 1]['date-a']
+        if (articles) {
+            const articleKeys = Object.keys(articles);
+            if (articleKeys.length > 0) {
+                startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+            }
         }
         collection
             .limit(20)
             .orderBy("date-a")
             .startAt(startAt)
             .get()
-            .then(articles => {
-                const articlesData = []
-                articles.forEach(doc => {
-                    articlesData.push(doc.data())
+            .then(articlesResponse => {
+                const articlesData = {}
+                articlesResponse.forEach(doc => {
+                    articlesData[doc.id] = doc.data()
                 })
                 
                 this.setState({
                     ...this.state,
-                    allArticles: this.state.allArticles.concat(articlesData)
-                }, () => {
-                    this.changeSort(this.state.source)
+                    articles: {
+                        ...this.state.articles,
+                        ...articlesData
+                    }
                 });
             })
->>>>>>> 11e32086d684e7f0210f907a1dba9aeaf375a40c
     }
 
     changeSort = source => {

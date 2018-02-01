@@ -106,7 +106,7 @@ class Article extends Component {
     }
 
     render() {
-        const {articleData} = this.state
+        const { articleData } = this.props
         return (
             <div className="card">
                 <a className="cardLink" href={articleData.url} target="_blank" >
