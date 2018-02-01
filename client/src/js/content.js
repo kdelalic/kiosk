@@ -22,7 +22,8 @@ class Content extends Component {
 
         this.state = {
             source: "all",
-            page: 1
+            page: 1,
+            allArticles: []
         }
     }
 
@@ -55,41 +56,39 @@ class Content extends Component {
             this.setState({
                 page: this.state.page + 1
             }, () => {
-                const url = "/api/content/?page=" + this.state.page
-                axios.get(url)
-                .then(response => {
-                    this.setState({
-                        ...this.state,
-                        allArticles: {
-                            ...this.state.allArticles,
-                            ...response.data
-                        }
-                    }, () => {
-                        this.changeSort(this.state.source)
-                    });
-                })
-                .catch(err => {
-                    console.log(err)
-                });
+                this._populate();
             })
         }
     }
 
     componentWillMount() {
+        this._populate();
+    }
+
+    _populate = () => {
+        const { allArticles } = this.state
         const collection = firestore.collection("articles")
+        let startAt = null;
+
+        console.log("POPULATING")        
+
+        if (allArticles && allArticles.length > 0) {
+            startAt = allArticles[allArticles.length - 1]['date-a']
+        }
         collection
             .limit(20)
-            // .offset(currentPage * 20)
+            .orderBy("date-a")
+            .startAt(startAt)
             .get()
             .then(articles => {
                 const articlesData = []
                 articles.forEach(doc => {
                     articlesData.push(doc.data())
                 })
-
+                
                 this.setState({
                     ...this.state,
-                    allArticles: articlesData
+                    allArticles: this.state.allArticles.concat(articlesData)
                 }, () => {
                     this.changeSort(this.state.source)
                 });
