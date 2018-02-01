@@ -13,19 +13,12 @@ class Source extends Component {
             
         }
     }
-
-    componentWillMount() {
-        this.setState({
-            ...this.state,
-            sourceData: this.props.sourceData
-        })
-    }
-
+    
     render() {
-        const {sourceData} = this.state
+        const {sourceData} = this.props
         return (
             <div className="source">
-                <Button onClick={this.props.sortBySource(sourceData.name)} className="sortSource">
+                <Button onClick={this.props.sortBySource(this.props.id)} className="sortSource">
                     <img className="sourceLogo" src={sourceData.logo} alt={sourceData.name}/>
                     <div className="sourceName">{sourceData.name}</div>
                 </Button>

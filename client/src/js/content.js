@@ -8,6 +8,7 @@ import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 
 import axios from 'axios'
+import { firestore } from './firebase.js'
 
 import {
     Link
@@ -19,7 +20,7 @@ class Content extends Component {
         super(props)
 
         this.state = {
-            source: "all",
+            source: "content",
             page: 1
         }
     }
@@ -53,17 +54,15 @@ class Content extends Component {
             this.setState({
                 page: this.state.page + 1
             }, () => {
-                const url = "/api/content/?page=" + this.state.page
+                const url = "/api/" + this.state.source + "/?page=" + this.state.page
                 axios.get(url)
                 .then(response => {
                     this.setState({
                         ...this.state,
-                        allArticles: {
-                            ...this.state.allArticles,
+                        articles: {
+                            ...this.state.articles,
                             ...response.data
                         }
-                    }, () => {
-                        this.changeSort(this.state.source)
                     });
                 })
                 .catch(err => {
@@ -79,9 +78,7 @@ class Content extends Component {
         .then(response => {
             this.setState({
                 ...this.state,
-                allArticles: response.data
-            }, () => {
-                this.changeSort(this.state.source)
+                articles: response.data
             });
         })
         .catch(err => {
@@ -90,14 +87,22 @@ class Content extends Component {
     }
 
     changeSort = source => {
-        if(source === "all") {
+        var articles = {}
+        firestore.collection("articles")
+        .where("site", "==", source)
+        .get()
+        .then( querySnapshot => {
+            querySnapshot.forEach(article => {
+                articles[article.id] = article.data()
+            })
             this.setState({
                 ...this.state,
-                articles: this.state.allArticles
+                articles: articles,
+                source: source,
+                page: 1
             })
-        } else {
-
-        }
+        })
+        
     }
 
     render() {

@@ -22,40 +22,75 @@ class Sidebar extends Component {
                 logo: All,
             },
             sources: {
-                "source-1": {
+                "CoinDesk": {
                     name: "CoinDesk",
                     logo: CoinDesk,
                     url: "https://www.coindesk.com/"
                 },
-                "source-2": {
-                    name: "Bitcoin News",
-                    logo: BitcoinNews,
-                    url: "https://news.bitcoin.com/"
-                },
-                "source-3": {
-                    name: "Bitcoinist",
-                    logo: Bitcoinist,
-                    url: "http://bitcoinist.com/"
-                },
-                "source-4": {
-                    name: "Bitmag",
-                    logo: Bitmag,
-                    url: "https://bitcoinmagazine.com/"
-                },
-                "source-5": {
-                    name: "Blockonomi",
-                    logo: Blockonomi,
-                    url: "https://blockonomi.com/"
-                },
-                "source-6": {
+                "coinmeme": {
                     name: "Coinmeme",
                     logo: Coinmeme,
                     url: "https://coinmeme.io/"
                 },
-                "source-7": {
+                "Bitcoinist": {
+                    name: "Bitcoinist",
+                    logo: Bitcoinist,
+                    url: "http://bitcoinist.com/"
+                },
+                "Bitcoin Magazine": {
+                    name: "Bitcoin Magazine",
+                    logo: Bitmag,
+                    url: "https://bitcoinmagazine.com/"
+                },
+                "Bitcoin News": {
+                    name: "Bitcoin News",
+                    logo: BitcoinNews,
+                    url: "https://news.bitcoin.com/"
+                },
+                "Blockonomi": {
+                    name: "Blockonomi",
+                    logo: Blockonomi,
+                    url: "https://blockonomi.com/"
+                },
+                "The Blockchain": {
                     name: "The Blockchain",
                     logo: TheBlockchain,
                     url: "http://the-blockchain.com/"
+                },
+                "TechCrunch": {
+                    name: "TechCrunch",
+                    logo: TheBlockchain,
+                    url: "https://techcrunch.com/"
+                },
+                "CCN": {
+                    name: "CryptoCoinNews",
+                    logo: TheBlockchain,
+                    url: "https://www.ccn.com/"
+                },
+                "CNBC": {
+                    name: "CNBC",
+                    logo: TheBlockchain,
+                    url: "https://www.cnbc.com/"
+                },
+                "NYTimes": {
+                    name: "New York Times",
+                    logo: TheBlockchain,
+                    url: "https://www.nytimes.com/"
+                },
+                "Quartz": {
+                    name: "The Blockchain",
+                    logo: TheBlockchain,
+                    url: "https://qz.com/"
+                },
+                "WSJ": {
+                    name: "Wall Street Journal",
+                    logo: TheBlockchain,
+                    url: "https://www.wsj.com/"
+                },
+                "Hacker Noon": {
+                    name: "Hacker Noon",
+                    logo: TheBlockchain,
+                    url: "https://hackernoon.com/"
                 },
             }
         }
@@ -64,13 +99,13 @@ class Sidebar extends Component {
     render() {
         return (
             <div className="sidebar">
-                <Button onClick={this.props.sortBySource("all")} className="source">
+                <Button onClick={this.props.sortBySource("content")} className="source">
                     <img className="sourceLogo" src={this.state.defaultSource.logo} alt={this.state.defaultSource.name}/>
                     <div className="sourceName">{this.state.defaultSource.name}</div>
                 </Button>
                 {this.state.sources && Object.keys(this.state.sources).map((key) => {
                     return (
-                        <Source className="sourceComp" key={key} sortBySource={this.props.sortBySource} sourceData={this.state.sources[key]}/>
+                        <Source className="sourceComp" key={key} sortBySource={this.props.sortBySource} id={key} sourceData={this.state.sources[key]}/>
                     )
                 })}
             </div>
