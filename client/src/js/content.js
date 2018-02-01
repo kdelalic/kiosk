@@ -9,6 +9,8 @@ import Button from 'material-ui/Button'
 
 import axios from 'axios'
 
+import {firestore} from './firebase.js'
+
 import {
     Link
 } from 'react-router-dom'
@@ -74,19 +76,24 @@ class Content extends Component {
     }
 
     componentWillMount() {
-        const url = "/api/content/?page=" + this.state.page
-        axios.get(url)
-        .then(response => {
-            this.setState({
-                ...this.state,
-                allArticles: response.data
-            }, () => {
-                this.changeSort(this.state.source)
-            });
-        })
-        .catch(err => {
-            console.log(err)
-        });
+        const collection = firestore.collection("articles")
+        collection
+            .limit(20)
+            // .offset(currentPage * 20)
+            .get()
+            .then(articles => {
+                const articlesData = []
+                articles.forEach(doc => {
+                    articlesData.push(doc.data())
+                })
+
+                this.setState({
+                    ...this.state,
+                    allArticles: articlesData
+                }, () => {
+                    this.changeSort(this.state.source)
+                });
+            })
     }
 
     changeSort = source => {
