@@ -67,7 +67,7 @@
     width: 100%;
     object-position: center;
     object-fit: cover;
-    max-height: 200px;
+    height: 200px;
 }
 
 .title {

@@ -15,7 +15,8 @@ import {
     setUser,
     setBookmarkIDs,
     addBookmark,
-    setLoaded
+    setBookmarksLoaded,
+    setUserLoaded
 } from './redux.js';
 import {
     Route,
@@ -45,15 +46,24 @@ class App extends Component {
         this.firebase = base.initializedApp.firebase_;
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.user) {
+            this.props.setUserLoaded(true)
+        }
+    }
+
     componentDidMount() {
         window.scrollTo(0, 0)
     }
 
     componentWillMount() {
         this.firebase.auth().onAuthStateChanged( user => {
-			if (user) {                
-                firestore.collection("users").doc(user.uid)
-                .get().then( doc => {
+			if (user) {             
+                this.props.setUserLoaded(false)   
+                firestore.collection("users")
+                .doc(user.uid)
+                .get()
+                .then( doc => {
                     if (doc.exists) {
                         var bookmarkIDs = {}
                         Object.keys(doc.data().bookmarks).filter( key => {
@@ -66,20 +76,22 @@ class App extends Component {
                             return true
                         })
                         this.props.setBookmarkIDs(bookmarkIDs)
-                        if(!this.props.loaded) {
+                        if(!this.props.bookmarksLoaded) {
                             setTimeout(this.loadBookmarks, 2000)
                         }
                     }
-                }).catch(function(error) {
+                })
+                .catch(function(error) {
                     console.log("Error getting document:", error);
                 });
                 this.props.setUser(user)
+                this.props.setUserLoaded(true)
 			}
         });
     }
 
     loadBookmarks = () => {
-        if(!this.props.loaded){
+        if(!this.props.bookmarksLoaded){
             const articleIDs = this.props.bookmarkIDs
             const collection = firestore.collection("articles")
 
@@ -91,7 +103,7 @@ class App extends Component {
                     })
                 })
             })
-            this.props.setLoaded(true)
+            this.props.setBookmarksLoaded(true)
         }
     }
     
@@ -118,7 +130,7 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
                     {
-                        this.props.user ? 
+                        this.props.userLoaded ? 
                         <div /> :
                         <div className="loadingDiv">
                             <div className="loading">
@@ -153,7 +165,8 @@ class App extends Component {
 const mapStateToProps = state => ({
     user: state.user,
     bookmarkIDs: state.bookmarkIDs,
-    loaded: state.loaded
+    bookmarksLoaded: state.bookmarksLoaded,
+    userLoaded: state.userLoaded
 });
 
 const mapDispatchToProps = dispatch => {
@@ -161,7 +174,8 @@ const mapDispatchToProps = dispatch => {
         setUser: bindActionCreators(setUser, dispatch),
         setBookmarkIDs: bindActionCreators(setBookmarkIDs, dispatch),
         addBookmark: bindActionCreators(addBookmark, dispatch),
-        setLoaded: bindActionCreators(setLoaded, dispatch)
+        setBookmarksLoaded: bindActionCreators(setBookmarksLoaded, dispatch),
+        setUserLoaded: bindActionCreators(setUserLoaded, dispatch)
     };
 };
 

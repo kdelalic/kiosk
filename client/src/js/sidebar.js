@@ -20,6 +20,7 @@ class Sidebar extends Component {
             defaultSource: {
                 name: "Latest News",
                 logo: All,
+                sourcesLoaded: false
             },
             sources: {
 
@@ -27,13 +28,17 @@ class Sidebar extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
             firestore.collection("sources")
             .get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
                     this.props.addSource(doc.id, doc.data())
                 });
+                this.setState({
+                    ...this.state,
+                    sourcesLoaded: true
+                })
             })
             .catch(err => {
                 console.log('Error getting documents', err);

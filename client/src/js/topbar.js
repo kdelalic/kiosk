@@ -20,7 +20,8 @@ import { base } from './firebase.js'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    setUser
+    setUser,
+    setUserLoaded
 } from './redux.js';
 
 import {
@@ -38,19 +39,9 @@ class Topbar extends Component {
             appsOpen: false,
             anchorEl: null,
             loginOpen: false,
-            topSitesVisible: true,
-            loading: true,
+            topSitesVisible: true
         }
         this.firebase = base.initializedApp.firebase_;
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.user) {
-            this.setState({
-                ...this.state,
-                loading: false,
-            })
-        }
     }
 
     componentDidMount(){
@@ -163,7 +154,7 @@ class Topbar extends Component {
     }
 
     handleLogin = site => event => {
-
+        this.props.setUserLoaded(false)
         var provider = null
         if (site === "facebook") {
             provider = new this.firebase.auth.FacebookAuthProvider();
@@ -177,11 +168,7 @@ class Topbar extends Component {
 
         this.firebase.auth().getRedirectResult().then(result => {
 
-            this.setState({
-                ...this.state,
-                loading: false
-            })
-
+            this.props.setUserLoaded(true)
             this.props.setUser(result.user)
         })
         event.preventDefault();
@@ -275,7 +262,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
     return {
-        setUser: bindActionCreators(setUser, dispatch)
+        setUser: bindActionCreators(setUser, dispatch),
+        setUserLoaded: bindActionCreators(setUserLoaded, dispatch)
     };
 };
 

@@ -17,7 +17,8 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     addBookmark,
-    setLoaded
+    setBookmarks,
+    setBookmarksLoaded
 } from './redux.js';
 
 class Bookmarks extends Component {
@@ -30,7 +31,7 @@ class Bookmarks extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.loaded) {
+        if(!this.props.bookmarksLoaded) {
             const articleIDs = this.props.bookmarkIDs
             const collection = firestore.collection("articles")
 
@@ -42,7 +43,7 @@ class Bookmarks extends Component {
                     })
                 })
             })
-            this.props.setLoaded(true)
+            this.props.setBookmarksLoaded(true)
         }
     }
 
@@ -66,7 +67,7 @@ class Bookmarks extends Component {
                 </Grid>
                 <div className="feed">
                     {   
-                        this.props.loaded && Object.keys(this.props.bookmarks)
+                        this.props.bookmarksLoaded && Object.keys(this.props.bookmarks)
                         .filter(key => this.props.bookmarks[key])
                         .map((key) => {
                             return (
@@ -84,13 +85,14 @@ const mapStateToProps = state => ({
     user: state.user,
     bookmarkIDs: state.bookmarkIDs,
     bookmarks: state.bookmarks,
-    loaded: state.loaded
+    bookmarksLoaded: state.bookmarksLoaded
 });
 
 const mapDispatchToProps = dispatch => {
     return {
         addBookmark: bindActionCreators(addBookmark, dispatch),
-        setLoaded: bindActionCreators(setLoaded, dispatch)
+        setBookmarks: bindActionCreators(setBookmarks, dispatch),
+        setBookmarksLoaded: bindActionCreators(setBookmarksLoaded, dispatch)
     };
 };
 
