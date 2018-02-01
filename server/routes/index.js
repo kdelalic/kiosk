@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var serviceAccount = require("../path/kiosk-f1a66-firebase-adminsdk-434m3-8468b3596a.json");
-
-
+var cron = require('node-cron');
+var tools = require('./functions.js'); 
 var admin = require("firebase-admin");
 var request = require('request');
 var cheerio = require('cheerio');
@@ -12,10 +12,10 @@ var users = require("./users.js");
 var cfg = require("./config.js");
 var auth = require("./auth")();
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://kiosk-f1a66.firebaseio.com"
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://kiosk-f1a66.firebaseio.com"
+// });
 
 Array.prototype.contains = function (obj) {
     var i = this.length;
@@ -49,47 +49,190 @@ function shuffle(originalArray) {
 }
 var db = admin.firestore();
 
-/* GET home page. */
-// d = {};
-// sources = ["bitcoinist","bitcoin","bitmag","theblockchain","coindesk","blockonomi","coinmeme"]
-// db.getCollections().then(collections => {
+function update(){
+    tools.bitcoinist
+    tools.bitmag
+    tools.theblockchain
+    tools.coinmeme
+    tools.blockonomi
+    tools.bitcoin
+    tools.coindesk
+}
 
-//  //for (let c of collections) {
+router.get("/api/coindesk", function (req, res, next) {
+var vd = {}
+var currentPage = 1
+if (typeof req.query.page !== 'undefined'){
+    currentPage = +req.query.page;
+}
+var queryRef = db.collection('articles')
+// .limit(10)
+// .offset(currentPage * 10)
+.where('site', '==', '1DIxE06gUQFTNskLX7Nd')
+.get()
 
-//     // if (sources.contains(collections.id)){
-//     //     console.log(c.id)
-//     db
-//         .collection("articles")
-//         //.orderBy('date-a')
-//         .limit(20)
-//         .offset(20)
-//         .get()
+.then((snapshot) => {
+    snapshot.forEach((doc) => {
+        vd[doc.id] = doc.data()
+    });
+   res.status(200).json(vd)
+}).catch((err) => {
+    console.log('Error getting documents', err);
+});
 
-//     .then((snapshot) => {
-//         snapshot.forEach((doc) => {
-//         	var i = {}
-//             d[doc.id] = doc.data()
-//         });
+})
 
-//     })
-//     .catch((err) => {
-//         console.log('Error getting documents', err);
-//     });
+router.get("/api/bitcoinist", function (req, res, next) {
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined'){
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+    // .limit(10)
+    // .offset(currentPage * 10)
+    .where('site', '==', 'UZUksRVofjXewHCGH46B')
+    .get()
+    
+    .then((snapshot) => {
+        snapshot.forEach((doc) => {
+            vd[doc.id] = doc.data()
+        });
+       res.status(200).json(vd)
+    }).catch((err) => {
+        console.log('Error getting documents', err);
+    });
+    
+    })
 
 
-// //}
+    router.get("/api/BitcoinMagazine", function (req, res, next) {
+        var vd = {}
+        var currentPage = 1
+        if (typeof req.query.page !== 'undefined'){
+            currentPage = +req.query.page;
+        }
+        var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'YFHfBR51cP9pPcomXRec')
+        .get()
+        
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
+            });
+           res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
+        
+        })
 
-// });
+router.get("/api/BitcoinNews", function (req, res, next) {
+            var vd = {}
+            var currentPage = 1
+            if (typeof req.query.page !== 'undefined'){
+                currentPage = +req.query.page;
+            }
+            var queryRef = db.collection('articles')
+            // .limit(10)
+            // .offset(currentPage * 10)
+            .where('site', '==', 'Vd1wHH0eo9YPQYp0LUg2')
+            .get()
+            
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    vd[doc.id] = doc.data()
+                });
+               res.status(200).json(vd)
+            }).catch((err) => {
+                console.log('Error getting documents', err);
+            });
+            
+            })
+router.get("/api/TheBlockchain", function (req, res, next) {
+                var vd = {}
+                var currentPage = 1
+                if (typeof req.query.page !== 'undefined'){
+                    currentPage = +req.query.page;
+                }
+                var queryRef = db.collection('articles')
+                // .limit(10)
+                // .offset(currentPage * 10)
+                .where('site', '==', 'IEuOxRvA5umqJpxVBUDE')
+                .get()
+                
+                .then((snapshot) => {
+                    snapshot.forEach((doc) => {
+                        vd[doc.id] = doc.data()
+                    });
+                   res.status(200).json(vd)
+                }).catch((err) => {
+                    console.log('Error getting documents', err);
+                });
+                
+                })
 
+router.get("/api/Blockonomi", function (req, res, next) {
+                    var vd = {}
+                    var currentPage = 1
+                    if (typeof req.query.page !== 'undefined'){
+                        currentPage = +req.query.page;
+                    }
+                    var queryRef = db.collection('articles')
+                    // .limit(10)
+                    // .offset(currentPage * 10)
+                    .where('site', '==', 'Zt6pBLjPpUXDaA4j4IlJ')
+                    .get()
+                    
+                    .then((snapshot) => {
+                        snapshot.forEach((doc) => {
+                            vd[doc.id] = doc.data()
+                        });
+                       res.status(200).json(vd)
+                    }).catch((err) => {
+                        console.log('Error getting documents', err);
+                    });
+                    
+                    })
+
+router.get("/api/Blockonomi", function (req, res, next) {
+                    var vd = {}
+                    var currentPage = 1
+                    if (typeof req.query.page !== 'undefined'){
+                        currentPage = +req.query.page;
+                    }
+                    var queryRef = db.collection('articles')
+                    // .limit(10)
+                    // .offset(currentPage * 10)
+                    .where('site', '==', 'Zt6pBLjPpUXDaA4j4IlJ')
+                    .get()
+                    
+                    .then((snapshot) => {
+                        snapshot.forEach((doc) => {
+                            vd[doc.id] = doc.data()
+                        });
+                       res.status(200).json(vd)
+                    }).catch((err) => {
+                        console.log('Error getting documents', err);
+                    });
+                    
+                    })
+cron.schedule('*/5 * * * * *', function(){
+    console.log('running a task every minute');
 router.get('/api/content', function (req, res, next) {
     d = {};
+    fd = {};
     var currentPage = 1
 
     if (typeof req.query.page !== 'undefined') {
         currentPage = +req.query.page;
     }
-    console.log(currentPage)
+    
     sources = ["bitcoinist", "bitcoin", "bitmag", "theblockchain", "coindesk", "blockonomi", "coinmeme"]
+ 
+      
     db.getCollections().then(collections => {
 
         db
@@ -107,31 +250,37 @@ router.get('/api/content', function (req, res, next) {
                 var k = Object.keys(d)
 
                 var sk = shuffle(k)
-                fd = {}
+                //fd = {}
                 for (var i = 0; i < sk.length; i++) {
                     fd[sk[i]] = d[sk[i]]
                 }
-
-
                 res.status(200).json(fd);
             })
             .catch((err) => {
                 console.log('Error getting documents', err);
             });
-
-
-        //}
-
-    });
-
-
+        })
 });
-
+});
 router.get("/", function (req, res) {
     res.json({
         status: "My API is alive!"
     });
 });
+
+// ['/api/coindesk', '/api'].forEach(function(path) {
+//     router.get(path, function(req, res) { 
+//     vd = {}
+//     var queryRef = db.collection('articles').where('site', '==', 'CCN').get()
+//     .then((snapshot) => {
+//         snapshot.forEach((doc) => {
+//             vd[doc.id] = doc.data()
+//         });
+//        console.log(vd)
+//     }) });
+//   });
+
+
 
 router.post("/api/user", auth.authenticate(), function (req, res) {
     //console.log(req.headers.refreshToken)
@@ -146,27 +295,17 @@ router.post("/api/user", auth.authenticate(), function (req, res) {
 
 
 
-// router.post("/token", function(req, res) {  
-//     if (req.body.email && req.body.password) {
-//         var email = req.body.email;
-//         var password = req.body.password;
-//         var user = users.find(function(u) {
-//             return u.email === email && u.password === password;
-//         });
-//         if (user) {
-//             var payload = {
-//                 id: user.id
-//             };
-//             var token = jwt.encode(payload, cfg.jwtSecret);
-//             res.json({
-//                 token: token
-//             });
-//         } else {
-//             res.sendStatus(401);
-//         }
-//     } else {
-//         res.sendStatus(401);
-//     }
-// });
 console.log("OKK")
 module.exports = router;
+
+
+// Create a query against the collection
+vd = {}
+var queryRef = db.collection('articles').where('site', '==', 'CCN').get()
+.then((snapshot) => {
+    //console.log(snapshot.data())
+    snapshot.forEach((doc) => {
+        vd[doc.id] = doc.data()
+    });
+   //console.log(vd)
+})

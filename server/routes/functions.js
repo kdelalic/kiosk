@@ -4,12 +4,14 @@ var cheerio = require('cheerio');
 var og = require('scrape-meta');
 var express = require("express");
 var bodyParser = require('body-parser');
+var urlMetadata = require('url-metadata')
 var Nightmare = require('nightmare'),
     nightmare = Nightmare({
         show: false
     });
 var phantom = require('phantom');
 var jsdom = require('jsdom');
+
 
 
 
@@ -39,9 +41,47 @@ admin.initializeApp({
 
 var db = admin.firestore();
 
-var sources = ["CoinDesk", "Bitcoin News"]
+//var sources = ["CoinDesk", "Bitcoin News"]
 
-function coindesk() {
+function check(url){
+        // Create a query against the collection
+    return new Promise(function (resolve,reject){
+    var queryRef = db.collection('coindesk').where('url', '==', url).get()
+    .then((snapshot) => {
+        var vd = {}
+        snapshot.forEach((doc) => {
+            vd[doc.id] = doc.data()
+        });
+        resolve(vd)
+    })
+})
+}
+
+
+
+
+function  tags(link, tag, subtag){
+    return new Promise(function (resolve, reject) {
+        var tags = []
+        request(link, function (error, response, body){
+            
+            if (error) {
+                return console.error("error")
+            }
+            var $ = cheerio.load(body);
+            $(tag).find(subtag).each(function () {
+                var at = $(this).attr('href')
+                var title = at.substring(at.lastIndexOf("tag/")+4, at.lastIndexOf("/"));
+                tags.push(title)
+            })
+        resolve(tags) 
+        })
+          
+})
+   
+}
+
+var coindesk = function coindesk() {
     var n = new Set();
     request("https://www.coindesk.com/", function (error, response, body) {
         if (error) {
@@ -59,25 +99,46 @@ function coindesk() {
                 let link = $(this).attr('href')
 
                 if (!(n.has(link))) {
+                    check(link).then((vd) => {
+                        if (Object.keys(vd).length === 0){
+                            console.log("S")
+                
                     og
                         .scrapeUrl(link)
                         .then((metadata) => {
                             var lastIndex = metadata["title"].lastIndexOf("-");
                             var title = metadata["title"].substring(0, lastIndex);
-
-                            var docRef = db.collection("articles").doc()
-                            var articles = {
-                                "id": docRef.id,
-                                "site": metadata["publisher"],
-                                "url": metadata["url"],
-                                "title": title,
-                                "image": metadata["image"],
-                                "date-a": metadata["date"]
+                            var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
                             }
-                            //console.log(articles)
-                            docRef.set(articles)
+                            
+                            
+                            tags(link, 'p[class="single-tags"]','a')
+                            .then((tg) => { 
+                                //console.log(tg)
+                                var docRef = db.collection("articles").doc()
+                                var articles = {
+                                    "id": docRef.id,
+                                    "site": "1DIxE06gUQFTNskLX7Nd",
+                                    "url": metadata["url"],
+                                    "title": title,
+                                    "image": metadata["image"],
+                                    "date-a": date,
+                                    "tags": tg
+                                }
+                
+                                //docRef.set(articles)
+                                db.collection("coindesk").add(articles)
+                            
+                                
+                            }).catch((err) => console.error("pFail"))
+                            
+                            
                         }).catch((err) => console.error("Fail"))
-
+                    }
+                })
+                
                 }
                 n.add(link)
             }
@@ -86,8 +147,9 @@ function coindesk() {
     });
 
 }
+coindesk()
 
-function bitcoin() {
+var bitcoin = function bitcoin() {
 
     request("https://news.bitcoin.com/", function (error, response, body) {
         if (error) {
@@ -104,18 +166,23 @@ function bitcoin() {
                 .then((metadata) => {
                     var lastIndex = metadata["title"].lastIndexOf("-");
                     var title = metadata["title"].substring(0, lastIndex);
+                    var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
 
                     var docRef = db.collection("articles").doc()
                     var articles = {
                         "id": docRef.id,
-                        "site": metadata["publisher"],
+                        "site": "Vd1wHH0eo9YPQYp0LUg2",
                         "url": metadata["url"],
                         "title": title,
                         "image": metadata["image"],
-                        "date-a": metadata["date"]
+                        "date-a": date
                     }
                     //console.log(articles)
                     docRef.set(articles)
+                    
                 }).catch((err) => console.error("Fail"))
         });
     });
@@ -123,7 +190,7 @@ function bitcoin() {
 }
 
 
-function blockonomi() {
+var blockonomi = function blockonomi() {
     var links = ["https://blockonomi.com/page/2/", "https://blockonomi.com/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -140,26 +207,30 @@ function blockonomi() {
                     .scrapeUrl(a)
                     .then((metadata) => {
                         //console.log(metadata["title"])
-
+                        var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
 
                         var docRef = db.collection("articles").doc()
                         var articles = {
                             "id": docRef.id,
-                            "site": metadata["publisher"],
+                            "site": "Zt6pBLjPpUXDaA4j4IlJ",
                             "url": metadata["url"],
                             "title": metadata["title"],
                             "image": metadata["image"],
-                            "date-a": metadata["date"]
+                            "date-a": date
                         }
                         //console.log(articles)
                         docRef.set(articles)
+                        
                     }).catch((err) => console.error("Fail"))
             });
         });
     }
 }
 
-function cointele() {
+var cointele = function cointele() {
 
     request("https://cointelegraph.com/", function (error, response, body) {
         if (error) {
@@ -189,13 +260,14 @@ function cointele() {
                     }
                     //console.log(articles)
                     docRef.set(articles)
+                    
                 }).catch((err) => console.error("Fail"))
         });
     });
 
 }
 
-function coinmeme() {
+var coinmeme = function coinmeme() {
     n = new Set()
     request("https://coinmeme.io", function (error, response, body) {
         if (error) {
@@ -211,7 +283,10 @@ function coinmeme() {
                 og
                     .scrapeUrl(a)
                     .then((metadata) => {
-                        //console.log(metadata["title"])
+                        var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
                         var lastIndex = metadata["title"].lastIndexOf("-");
                         var title = metadata["title"].substring(0, lastIndex)
                         if (lastIndex == -1) {
@@ -227,10 +302,11 @@ function coinmeme() {
                                 "url": metadata["url"],
                                 "title": title,
                                 "image": metadata["image"],
-                                "date-a": metadata["date"]
+                                "date-a": date
                             }
                             //console.log(articles)
                             docRef.set(articles)
+                            
                         }
 
 
@@ -242,7 +318,7 @@ function coinmeme() {
 
 }
 
-function Suppoman() {
+var suppo = function Suppoman() {
     console.log("ss")
     nightmare
         //load a url
@@ -304,7 +380,7 @@ function Suppoman() {
     });
 }
 
-function theblockchain() {
+var theblockchain = function theblockchain() {
     var links = ["http://www.the-blockchain.com/news/page/2/", "http://www.the-blockchain.com/news/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -322,26 +398,30 @@ function theblockchain() {
                     .scrapeUrl(a)
                     .then((metadata) => {
                         //console.log(metadata["title"])
-
+                        var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
 
                         var docRef = db.collection("articles").doc()
                         var articles = {
                             "id": docRef.id,
-                            "site": metadata["publisher"],
+                            "site": "IEuOxRvA5umqJpxVBUDE",
                             "url": metadata["url"],
                             "title": metadata["title"],
                             "image": metadata["image"],
-                            "date-a": metadata["date"]
+                            "date-a": date
                         }
                         //console.log(articles)
                         docRef.set(articles)
+                        
                     }).catch((err) => console.error("Fail"))
             });
         });
     }
 }
 
-function youtube() {
+var youtube = function youtube() {
     request({
         uri: 'https://www.youtube.com/user/Suppoman2011/videos'
     }, function (err, response, body) {
@@ -396,7 +476,7 @@ function youtube() {
     });
 }
 
-function bitmag() {
+var bitmag = function bitmag() {
 
     request("https://bitcoinmagazine.com", function (error, response, body) {
         if (error) {
@@ -413,15 +493,19 @@ function bitmag() {
                 .then((metadata) => {
                     var lastIndex = metadata["title"].lastIndexOf("-");
                     var title = metadata["title"].substring(0, lastIndex);
+                    var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
 
                     var docRef = db.collection("articles").doc()
                     var articles = {
                         "id": docRef.id,
-                        "site": metadata["publisher"],
+                        "site": "YFHfBR51cP9pPcomXRec",
                         "url": metadata["url"],
                         "title": metadata["title"],
                         "image": metadata["image"],
-                        "date-a": metadata["date"]
+                        "date-a": date
                     }
                     //console.log(articles)
                     docRef.set(articles)
@@ -431,7 +515,7 @@ function bitmag() {
 
 }
 
-function bitcoinist() {
+var bitcoinist = function bitcoinist() {
     var links = ["http://bitcoinist.com/category/blockchain-technology/", "http://bitcoinist.com/category/altcoins/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -444,36 +528,54 @@ function bitcoinist() {
             $('a[class="featured-image"]').each(function () {
 
                 var a = $(this).attr('href');
-                console.log(a)
+                //console.log(a)
+                urlMetadata('https://www.coindesk.com/bitcoin-core-developers-join-mit-digital-currency-initiative/').then(
+                    function (metadata) { // success handler
+                        
+                    },
+                    function (error) { // failure handler
+                        console.log(error)
+                })
                 og
                     .scrapeUrl(a)
                     .then((metadata) => {
-                        console.log(metadata["title"])
-
-
+                        //console.log(metadata["title"])
+                        var lastIndex = metadata["title"].lastIndexOf("-");
+                        var title = metadata["title"].substring(0, lastIndex);
+                        var date =  metadata["date"]
+                            if (date === null){
+                                date = new Date();
+                            }
                         var docRef = db.collection("articles").doc()
                         var articles = {
                             "id": docRef.id,
-                            "site": metadata["publisher"],
+                            "site": "UZUksRVofjXewHCGH46B",
                             "url": metadata["url"],
                             "title": metadata["title"],
                             "image": metadata["image"],
-                            "date-a": metadata["date"]
+                            "date-a": date
                         }
-                        //console.log(articles)
-                        docRef.set(articles)
+                        console.log(articles)
+                        //docRef.set(articles)
                     }).catch((err) => console.error("Fail"))
             });
         });
     }
 }
 
-bitcoinist()
-bitcoin()
-bitmag()
-theblockchain()
-coindesk()
-blockonomi()
-coinmeme()
+ //bitcoinist()
+// bitcoin()
+// bitmag()
+// theblockchain()
+// coindesk()
+// blockonomi()
+// coinmeme()
+
+var datetime = new Date();
+console.log(datetime);
 console.log("Okai")
 //blockonomi()
+
+
+ 
+// Promise interface
