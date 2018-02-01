@@ -59,7 +59,7 @@ function update(){
     tools.coindesk
 }
 
-router.get("/api/coindesk", function (req, res, next) {
+router.get("/api/1DIxE06gUQFTNskLX7Nd", function (req, res, next) {
 var vd = {}
 var currentPage = 1
 if (typeof req.query.page !== 'undefined'){
@@ -82,7 +82,7 @@ var queryRef = db.collection('articles')
 
 })
 
-router.get("/api/bitcoinist", function (req, res, next) {
+router.get("/api/UZUksRVofjXewHCGH46B", function (req, res, next) {
     var vd = {}
     var currentPage = 1
     if (typeof req.query.page !== 'undefined'){
@@ -106,7 +106,7 @@ router.get("/api/bitcoinist", function (req, res, next) {
     })
 
 
-    router.get("/api/BitcoinMagazine", function (req, res, next) {
+    router.get("/api/YFHfBR51cP9pPcomXRec", function (req, res, next) {
         var vd = {}
         var currentPage = 1
         if (typeof req.query.page !== 'undefined'){
@@ -129,7 +129,7 @@ router.get("/api/bitcoinist", function (req, res, next) {
         
         })
 
-router.get("/api/BitcoinNews", function (req, res, next) {
+router.get("/api/Vd1wHH0eo9YPQYp0LUg2", function (req, res, next) {
             var vd = {}
             var currentPage = 1
             if (typeof req.query.page !== 'undefined'){
@@ -151,7 +151,7 @@ router.get("/api/BitcoinNews", function (req, res, next) {
             });
             
             })
-router.get("/api/TheBlockchain", function (req, res, next) {
+router.get("/api/IEuOxRvA5umqJpxVBUDE", function (req, res, next) {
                 var vd = {}
                 var currentPage = 1
                 if (typeof req.query.page !== 'undefined'){
@@ -174,7 +174,7 @@ router.get("/api/TheBlockchain", function (req, res, next) {
                 
                 })
 
-router.get("/api/Blockonomi", function (req, res, next) {
+router.get("/api/Zt6pBLjPpUXDaA4j4IlJ", function (req, res, next) {
                     var vd = {}
                     var currentPage = 1
                     if (typeof req.query.page !== 'undefined'){
@@ -197,7 +197,7 @@ router.get("/api/Blockonomi", function (req, res, next) {
                     
                     })
 
-router.get("/api/Blockonomi", function (req, res, next) {
+router.get("/api/Zt6pBLjPpUXDaA4j4IlJ", function (req, res, next) {
                     var vd = {}
                     var currentPage = 1
                     if (typeof req.query.page !== 'undefined'){
