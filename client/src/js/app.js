@@ -37,11 +37,15 @@ class App extends Component {
         super(props)
 
         this.state = {
-            source: "all",
+            source: "content",
             sidebar: true
         }
 
         this.firebase = base.initializedApp.firebase_;
+    }
+
+    componentDidMount() {
+        window.scrollTo(0, 0)
     }
 
     componentWillMount() {

@@ -38,6 +38,17 @@ export const removeBookmark = key => ({
     key
 })
 
+export const setSources = sources => ({
+    type: 'SET_SOURCES',
+    sources
+})
+
+export const addSource = (key, source) => ({
+    type: 'ADD_SOURCE',
+    key,
+    source
+})
+
 export const setLoaded = loaded => ({
     type: 'SET_LOADED',
     loaded
@@ -92,6 +103,20 @@ export const bookmarks = (state = {}, action) => {
     }
 }
 
+export const sources = (state = {}, action) => {
+    switch (action.type) {
+        case 'SET_SOURCES':
+            return action.sources
+        case 'ADD_SOURCE':
+        return {
+            ...state,
+            [action.key]: action.source
+        }
+        default:
+            return state
+    }
+}
+
 export const loaded = (state = {}, action) => {
     switch (action.type) {
         case 'SET_LOADED':
@@ -105,12 +130,13 @@ const rootReducer = combineReducers({
     user,
     bookmarkIDs,
     bookmarks,
+    sources,
     loaded
 });
 
 export default rootReducer
 
-export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, loaded: false}) {
+export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, sources: {}, loaded: false}) {
     const store = createStore(rootReducer, initialState);
     return store;
 }

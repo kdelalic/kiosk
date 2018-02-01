@@ -5,6 +5,11 @@ import Button from 'material-ui/Button'
 import All from '../img/all.png'
 
 import {firestore} from './firebase.js'
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+    addSource
+} from './redux.js';
 
 class Sidebar extends Component {
 
@@ -26,14 +31,9 @@ class Sidebar extends Component {
             firestore.collection("sources")
             .get()
             .then(snapshot => {
-                let sources = {}
                 snapshot.forEach(doc => {
-                    sources[doc.id] = doc.data()
+                    this.props.addSource(doc.id, doc.data())
                 });
-                this.setState({
-                    ...this.state,
-                    sources: sources
-                })
             })
             .catch(err => {
                 console.log('Error getting documents', err);
@@ -43,18 +43,33 @@ class Sidebar extends Component {
     render() {
         return (
             <div className="sidebar">
-                <Button onClick={this.props.sortBySource("all")} className="source">
-                    <img className="sourceLogo" src={this.state.defaultSource.logo} alt={this.state.defaultSource.name}/>
-                    <div className="sourceName">{this.state.defaultSource.name}</div>
-                </Button>
-                {this.state.sources && Object.keys(this.state.sources).map((key) => {
-                    return (
-                        <Source className="sourceComp" key={key} sortBySource={this.props.sortBySource} id={key} sourceData={this.state.sources[key]}/>
-                    )
-                })}
+                <div>
+                    <Button onClick={this.props.sortBySource("content")} className="source">
+                        <img className="sourceLogo" src={this.state.defaultSource.logo} alt={this.state.defaultSource.name}/>
+                        <div className="sourceName">{this.state.defaultSource.name}</div>
+                    </Button>
+                    {this.props.sources && Object.keys(this.props.sources).map((key) => {
+                        return (
+                            <Source className="sourceComp" key={key} sortBySource={this.props.sortBySource} id={key} sourceData={this.props.sources[key]}/>
+                        )
+                    })}
+                </div>
             </div>
         )
     }
 }
 
-export default Sidebar
+const mapStateToProps = state => ({
+    sources: state.sources
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addSource: bindActionCreators(addSource, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Sidebar);
