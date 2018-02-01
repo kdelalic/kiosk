@@ -24,6 +24,7 @@ import {
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import Reboot from 'material-ui/Reboot'
+import { CircularProgress } from 'material-ui/Progress';
 
 const theme = createMuiTheme({
 	palette: {
@@ -116,7 +117,15 @@ class App extends Component {
             <div className="app">
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
-
+                    {
+                        this.props.loaded ? 
+                        <div /> :
+                        <div className="loadingDiv">
+                            <div className="loading">
+                                <CircularProgress color="secondary" className="progress"/>
+                            </div>
+                        </div>
+                    }
                     <Topbar />
                     {sidebar && <Sidebar sortBySource={this.sortBySource}/>}
 

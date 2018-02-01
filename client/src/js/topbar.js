@@ -12,7 +12,6 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton'
-import { CircularProgress } from 'material-ui/Progress';
 import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
 import More from 'react-icons/lib/md/more-vert';
@@ -200,15 +199,6 @@ class Topbar extends Component {
     render() {
         return (
             <AppBar position="fixed" className="appBar">
-                {
-                    // this.state.loading ? 
-                    // <div className="loadingDiv">
-                    //     <div className="loading">
-                    //         <CircularProgress color="secondary" className="progress"/>
-                    //     </div>
-                    // </div> : 
-                    // <div></div>
-                }
                 <Toolbar>
                     <div className="left">
                         <Link to={'/'}>

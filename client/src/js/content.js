@@ -44,6 +44,7 @@ class Content extends Component {
 
     componentWillMount() {
         window.scrollTo(0, 0)
+        this._populate(this.state.source);
     }
 
     componentDidMount() {
@@ -69,10 +70,6 @@ class Content extends Component {
                 })
             }
         }
-    }
-
-    componentWillMount() {
-        this._populate(this.state.source);
     }
 
     _populate = source => {
@@ -130,7 +127,7 @@ class Content extends Component {
             } else {
                 console.log("POPULATING with", source + " (" + this.props.sources[this.state.source].name + ")")
                 // const url = "/api/" + source + "/?page=" + this.state.page
-                const url = "/api/content/?page=" + this.state.page
+                const url = "/api/" + source + "/?page=" + this.state.page
                 axios.get(url)
                     .then(response => {
                         this.setState({
