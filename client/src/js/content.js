@@ -9,6 +9,7 @@ import Button from 'material-ui/Button'
 
 import axios from 'axios'
 import { firestore } from './firebase.js'
+import {connect} from 'react-redux';
 
 import {
     Link
@@ -20,7 +21,8 @@ class Content extends Component {
         super(props)
 
         this.state = {
-            source: "all",
+            source: "content",
+            populating: false,
             page: 1,
             articles: {}
         }
@@ -31,8 +33,10 @@ class Content extends Component {
             this.setState({
                 ...this.state,
                 source: nextProps.source,
+                page: 0,
                 articles: null
             }, () => {
+                window.scrollTo(0, 0)
                 this._populate(this.state.source)
             })
         }
@@ -47,17 +51,19 @@ class Content extends Component {
     }
 
     handleScroll = () => {
-        const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
-        const body = document.body;
-        const html = document.documentElement;
-        const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-        const windowBottom = windowHeight + window.pageYOffset;
-        if (windowBottom >= docHeight) {
-            this.setState({
-                page: this.state.page + 1
-            }, () => {
-                this._populate(this.state.source);
-            })
+        if(!this.state.populating){
+            const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+            const body = document.body;
+            const html = document.documentElement;
+            const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            const windowBottom = windowHeight + window.pageYOffset;
+            if (windowBottom + docHeight * .4 >= docHeight) {
+                this.setState({
+                    page: this.state.page + 1
+                }, () => {
+                    this._populate(this.state.source);
+                })
+            }
         }
     }
 
@@ -66,70 +72,104 @@ class Content extends Component {
     }
 
     _populate = source => {
-        const {articles} = this.state;
-        const collection = firestore.collection("articles")
-        let startAt = null;
+        this.setState({
+            ...this.state,
+            populating: true
+        }, () => {
+            // const {articles} = this.state;
+            // const collection = firestore.collection("articles")
+            // let startAt = null;
 
-        console.log("POPULATING")
-        
-        if (source === "all") {
-            if (articles) {
-                const articleKeys = Object.keys(articles);
-                if (articleKeys.length > 0) {
-                    startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
-                }
-            }
-            collection
-                .limit(20)
-                .orderBy("date-a")
-                .startAt(startAt)
-                .get()
-                .then(articlesResponse => {
-                    const articlesData = {}
-                    articlesResponse.forEach(doc => {
-                        articlesData[doc.id] = doc.data()
+            if (source === "content") {
+                console.log("POPULATING with", source)
+                const url = "/api/content/?page=" + this.state.page
+                axios.get(url)
+                    .then(response => {
+                        this.setState({
+                            ...this.state,
+                            page: this.state.page + 1,
+                            populating: false,
+                            articles: {
+                                ...this.state.articles,
+                                ...response.data
+                            }
+                        });
                     })
-
-                    this.setState({
-                        ...this.state,
-                        articles: {
-                            ...this.state.articles,
-                            ...articlesData
-                        }
+                    .catch(err => {
+                        console.log(err)
                     });
-                })
-        } else {
-            if (articles) {
-                const articleKeys = Object.keys(articles);
-                if (articleKeys.length > 0) {
-                    startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
-                }
-            }
-            collection
-                .where("site", "==", source)
-                .limit(20)
-                .orderBy("date-a")
-                .startAt(startAt)
-                .get()
-                .then(articlesResponse => {
-                    const articlesData = {}
-                    articlesResponse.forEach(doc => {
-                        articlesData[doc.id] = doc.data()
+                // if (articles) {
+                //     const articleKeys = Object.keys(articles);
+                //     if (articleKeys.length > 0) {
+                //         startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+                //     }
+                // }
+                // collection
+                //     .limit(20)
+                //     .orderBy("date-a")
+                //     .startAt(startAt)
+                //     .get()
+                //     .then(articlesResponse => {
+                //         const articlesData = {}
+                //         articlesResponse.forEach(doc => {
+                //             articlesData[doc.id] = doc.data()
+                //         })
+
+                //         this.setState({
+                //             ...this.state,
+                //             articles: {
+                //                 ...this.state.articles,
+                //                 ...articlesData
+                //             }
+                //         });
+                //     })
+            } else {
+                console.log("POPULATING with", source + " (" + this.props.sources[this.state.source].name + ")")
+                // const url = "/api/" + source + "/?page=" + this.state.page
+                const url = "/api/content/?page=" + this.state.page
+                axios.get(url)
+                    .then(response => {
+                        this.setState({
+                            ...this.state,
+                            page: this.state.page + 1,
+                            populating: false,
+                            articles: {
+                                ...this.state.articles,
+                                ...response.data
+                            }
+                        });
                     })
-
-                    this.setState({
-                        ...this.state,
-                        articles: {
-                            ...this.state.articles,
-                            ...articlesData
-                        }
+                    .catch(err => {
+                        console.log(err)
                     });
-                })
-        }
-    }
+                // if (articles) {
+                //     const articleKeys = Object.keys(articles);
+                //     if (articleKeys.length > 0) {
+                //         startAt = articles[articleKeys[articleKeys.length - 1]]['date-a']
+                //     }
+                // }
+                // collection
+                //     .where("site", "==", source)
+                //     .limit(20)
+                //     .orderBy("date-a")
+                //     .startAt(startAt)
+                //     .get()
+                //     .then(articlesResponse => {
+                //         const articlesData = {}
+                //         articlesResponse.forEach(doc => {
+                //             articlesData[doc.id] = doc.data()
+                //         })
 
-    changeSort = source => {
-        
+                //         this.setState({
+                //             ...this.state,
+                //             articles: {
+                //                 ...this.state.articles,
+                //                 ...articlesData
+                //             }
+                //         });
+                //     })
+            }
+        })
     }
 
     render() {
@@ -138,7 +178,7 @@ class Content extends Component {
                 <Grid container spacing={24} className="headline">
                     <Grid item md={6}>
                         <Typography type="headline" component="h2" className="content-title">
-                            {this.state.source === "all" ? "Latest News" : this.state.source}
+                            {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
                         </Typography>
                     </Grid>
 
@@ -163,4 +203,10 @@ class Content extends Component {
     }
 }
 
-export default Content;
+const mapStateToProps = state => ({
+    sources: state.sources
+});
+
+export default connect(
+    mapStateToProps,
+)(Content);
