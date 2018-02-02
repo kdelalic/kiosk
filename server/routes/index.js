@@ -219,8 +219,9 @@ router.get("/api/Zt6pBLjPpUXDaA4j4IlJ", function (req, res, next) {
                     });
                     
                     })
-cron.schedule('*/5 * * * * *', function(){
-    console.log('running a task every minute');
+
+cron.schedule('* * */2 * * *', function(){
+    //console.log('running a task every minute');
 router.get('/api/content', function (req, res, next) {
     d = {};
     fd = {};
@@ -300,12 +301,12 @@ module.exports = router;
 
 
 // Create a query against the collection
-vd = {}
-var queryRef = db.collection('articles').where('site', '==', 'CCN').get()
-.then((snapshot) => {
-    //console.log(snapshot.data())
-    snapshot.forEach((doc) => {
-        vd[doc.id] = doc.data()
-    });
-   //console.log(vd)
-})
+// vd = {}
+// var queryRef = db.collection('articles').where('site', '==', 'CCN').get()
+// .then((snapshot) => {
+//     //console.log(snapshot.data())
+//     snapshot.forEach((doc) => {
+//         vd[doc.id] = doc.data()
+//     });
+//    //console.log(vd)
+// })
