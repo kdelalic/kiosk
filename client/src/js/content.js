@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import '../css/content.css'
 import Article from './article.js'
+import Progress from './_components/cryptofolio/progress.js'
 
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
@@ -173,23 +174,52 @@ class Content extends Component {
         })
     }
 
+    passCoins = coins => {
+        this.setState({
+            ...this.state,
+            coins: coins
+        })
+    }
+
+    passConvertCurrency = convertCurrency => {
+        this.setState({
+            ...this.state,
+            convertCurrency: convertCurrency
+        })
+    }
+
+    passCAD = CAD => {
+        this.setState({
+            ...this.state,
+            CAD: CAD
+        })
+    }
+
     render() {
         return (
             <div className="content">
                 <Grid container spacing={24} className="headline">
+
+                    <Grid item md={12} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
+                        <Progress minimal coins={this.state.coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
+                    </Grid>
+
                     <Grid item md={6}>
                         <Typography type="headline" component="h2" className="content-title">
                             {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
                         </Typography>
                     </Grid>
 
-                    <Grid item md={6}>
-                        <Link to={'/cryptofolio'}>
-                            <Button raised color="secondary" style={{ float: 'right' }}>
-                                Cryptofolio
-                            </Button>
-                        </Link>
-                    </Grid>
+                    {this.props.user ?
+                        <Grid item md={6}>
+                            <Link to={'/cryptofolio'}>
+                                <Button raised color="secondary" style={{ float: 'right' }}>
+                                    Cryptofolio
+                                </Button>
+                            </Link>
+                        </Grid> :
+                        <div />
+                    }
                 </Grid>
 
                 <div className="feed">
@@ -205,7 +235,8 @@ class Content extends Component {
 }
 
 const mapStateToProps = state => ({
-    sources: state.sources
+    sources: state.sources,
+    user: state.user
 });
 
 export default connect(

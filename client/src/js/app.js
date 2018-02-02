@@ -16,7 +16,7 @@ import {
     setBookmarkIDs,
     addBookmark,
     setBookmarksLoaded,
-    setUserLoaded
+    setUserLoading
 } from './redux.js';
 import {
     Route,
@@ -48,7 +48,7 @@ class App extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.user) {
-            this.props.setUserLoaded(true)
+            // this.props.setUserLoading(false)
         }
     }
 
@@ -59,7 +59,6 @@ class App extends Component {
     componentWillMount() {
         this.firebase.auth().onAuthStateChanged( user => {
 			if (user) {             
-                this.props.setUserLoaded(false)   
                 firestore.collection("users")
                 .doc(user.uid)
                 .get()
@@ -85,13 +84,14 @@ class App extends Component {
                     console.log("Error getting document:", error);
                 });
                 this.props.setUser(user)
-                this.props.setUserLoaded(true)
+                // this.props.setUserLoading(false)
 			}
         });
     }
 
     loadBookmarks = () => {
         if(!this.props.bookmarksLoaded){
+            console.log("LOAD BOOKMARKS")
             const articleIDs = this.props.bookmarkIDs
             const collection = firestore.collection("articles")
 
@@ -130,13 +130,13 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <Reboot />
                     {
-                        this.props.userLoaded ? 
-                        <div /> :
+                        this.props.userLoading ? 
                         <div className="loadingDiv">
                             <div className="loading">
                                 <CircularProgress color="secondary" className="progress"/>
                             </div>
-                        </div>
+                        </div> :
+                        <div />
                     }
                     <Topbar />
                     {sidebar && <Sidebar sortBySource={this.sortBySource}/>}
@@ -166,7 +166,7 @@ const mapStateToProps = state => ({
     user: state.user,
     bookmarkIDs: state.bookmarkIDs,
     bookmarksLoaded: state.bookmarksLoaded,
-    userLoaded: state.userLoaded
+    userLoading: state.userLoading
 });
 
 const mapDispatchToProps = dispatch => {
@@ -175,7 +175,7 @@ const mapDispatchToProps = dispatch => {
         setBookmarkIDs: bindActionCreators(setBookmarkIDs, dispatch),
         addBookmark: bindActionCreators(addBookmark, dispatch),
         setBookmarksLoaded: bindActionCreators(setBookmarksLoaded, dispatch),
-        setUserLoaded: bindActionCreators(setUserLoaded, dispatch)
+        setUserLoading: bindActionCreators(setUserLoading, dispatch)
     };
 };
 

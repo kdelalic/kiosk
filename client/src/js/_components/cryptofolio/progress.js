@@ -57,7 +57,7 @@ class Progress extends Component {
 	render() {
 		const currency = this.state.convertCurrency === undefined ? "" : this.state.convertCurrency.toUpperCase();
 		return (
-			<div className="cryptofolio-progress container">
+			<div className={"cryptofolio-progress container" + (this.props.minimal ? " minimal" : "")}>
 				<div className="cards">
 					<Paper className="stat">
 						<div className="stat-content">

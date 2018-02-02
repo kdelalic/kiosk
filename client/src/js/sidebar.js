@@ -19,35 +19,35 @@ class Sidebar extends Component {
         this.state = {
             defaultSource: {
                 name: "Latest News",
-                logo: All,
-                sourcesLoaded: false
+                logo: All
             },
             sources: {
 
-            }
+            },
+            sourcesLoading: true
         }
     }
 
-    componentWillMount() {
-            firestore.collection("sources")
-            .get()
-            .then(snapshot => {
-                snapshot.forEach(doc => {
-                    this.props.addSource(doc.id, doc.data())
-                });
-                this.setState({
-                    ...this.state,
-                    sourcesLoaded: true
-                })
-            })
-            .catch(err => {
-                console.log('Error getting documents', err);
+    componentDidMount() {
+        firestore.collection("sources")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                this.props.addSource(doc.id, doc.data())
             });
+            this.setState({
+                ...this.state,
+                sourcesLoading: false
+            })
+        })
+        .catch(err => {
+            console.log('Error getting sources', err);
+        });
     }
 
     render() {
         return (
-            <div className="sidebar">
+            <div className={"sidebar" + (this.state.sourcesLoading ? " sourcesLoading" : "")}>
                 <div>
                     <Button onClick={this.props.sortBySource("content")} className="source">
                         <img className="sourceLogo" src={this.state.defaultSource.logo} alt={this.state.defaultSource.name}/>

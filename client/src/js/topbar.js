@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     setUser,
-    setUserLoaded
+    setUserLoading
 } from './redux.js';
 
 import {
@@ -154,7 +154,7 @@ class Topbar extends Component {
     }
 
     handleLogin = site => event => {
-        this.props.setUserLoaded(false)
+        this.props.setUserLoading(true)
         var provider = null
         if (site === "facebook") {
             provider = new this.firebase.auth.FacebookAuthProvider();
@@ -164,11 +164,9 @@ class Topbar extends Component {
             provider = new this.firebase.auth.TwitterAuthProvider();
         }
         
-        this.firebase.auth().signInWithRedirect(provider);
+        this.firebase.auth().signInWithPopup(provider).then(result => {
 
-        this.firebase.auth().getRedirectResult().then(result => {
-
-            this.props.setUserLoaded(true)
+            this.props.setUserLoading(false)
             this.props.setUser(result.user)
         })
         event.preventDefault();
@@ -263,7 +261,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         setUser: bindActionCreators(setUser, dispatch),
-        setUserLoaded: bindActionCreators(setUserLoaded, dispatch)
+        setUserLoading: bindActionCreators(setUserLoading, dispatch)
     };
 };
 

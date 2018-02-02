@@ -10,7 +10,7 @@ import Paper from 'material-ui/Paper';
 import { checkPos, toMonth } from './helpers.js'
 import socketIOClient from "socket.io-client";
 import axios from 'axios'
-import { base } from '../../firebase'
+import { base, firestore } from '../../firebase'
 
 class Crypto extends Component {
 	constructor(props) {
@@ -26,7 +26,6 @@ class Crypto extends Component {
 	}
 
 	componentDidMount() {
-		console.log(base.initializedApp.firebase_.auth().currentUser)
 		this.firebaseRef = base.initializedApp.firebase_;
 		this.userID = this.firebaseRef.auth() && this.firebaseRef.auth().currentUser && this.firebaseRef.auth().currentUser.uid;
 
@@ -161,6 +160,7 @@ class Crypto extends Component {
 				},
 			}
 		}, () => {
+			firestore.collection("coins").doc(this.state.userID).add(this.state.coins)
 			this.socket.emit('SubAdd', { subs: this.state[this.state.userID].subscriptions });
 			this.handleClose();
 		})
