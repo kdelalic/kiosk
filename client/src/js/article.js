@@ -15,6 +15,7 @@ import Bookmark from 'react-icons/lib/fa/bookmark'
 import Trash from 'react-icons/lib/fa/trash'
 
 import {firestore} from './firebase.js'
+import firebase from 'firebase';
 
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -73,21 +74,13 @@ class Article extends Component {
             ...this.state,
             bookmarked: true
         })
-        //Store ID in firebase
         firestore.collection("users").doc(this.props.user.uid).set({
             bookmarks: {
                 [this.props.id] : true
             }
         }, {merge: true})
-        //Store article ID in redux ID store
         this.props.addBookmarkID(this.props.id)
-        //Fetch article data and add to redux article store
-        firestore.collection("articles").where("id", "==", this.props.id)
-            .get().then(article => {
-                article.forEach(doc => {
-                    this.props.addBookmark(doc.id, doc.data())
-                })
-            })
+        this.props.addBookmark(this.props.id, this.state.articleData)
     }
 
     unbookmark = event => {
@@ -96,11 +89,9 @@ class Article extends Component {
             ...this.state,
             bookmarked: false
         })
-        firestore.collection("users").doc(this.props.user.uid).set({
-            bookmarks: {
-                [this.props.id] : false
-            }
-        }, {merge: true})
+        firestore.collection("users").doc(this.props.user.uid).update({
+            ["bookmarks." + this.props.id]: firebase.firestore.FieldValue.delete()
+        })
         this.props.removeBookmarkID(this.props.id)
         this.props.removeBookmark(this.props.id)
     }

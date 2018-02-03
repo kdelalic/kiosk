@@ -124,7 +124,7 @@ export const sources = (state = {}, action) => {
 
 export const bookmarksLoaded = (state = {}, action) => {
     switch (action.type) {
-        case 'SET_BOOMARKS_LOADED':
+        case 'SET_BOOKMARKS_LOADED':
             return action.bookmarksLoaded
         default:
             return state

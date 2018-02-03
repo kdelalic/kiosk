@@ -12,7 +12,6 @@ import {
     Link
 } from 'react-router-dom'
 
-// import {firestore} from './firebase.js'
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {

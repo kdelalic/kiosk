@@ -63,7 +63,7 @@ class Content extends Component {
             const html = document.documentElement;
             const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
             const windowBottom = windowHeight + window.pageYOffset;
-            if (windowBottom + docHeight * .4 >= docHeight) {
+            if (windowBottom + docHeight * .25 >= docHeight) {
                 this.setState({
                     page: this.state.page + 1
                 }, () => {
