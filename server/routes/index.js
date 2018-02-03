@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var serviceAccount = require("../path/kiosk-f1a66-firebase-adminsdk-434m3-8468b3596a.json");
 var cron = require('node-cron');
-var tools = require('./functions.js'); 
+var tools = require('./functions.js');
 var admin = require("firebase-admin");
 var request = require('request');
 var cheerio = require('cheerio');
@@ -49,179 +49,163 @@ function shuffle(originalArray) {
 }
 var db = admin.firestore();
 
-function update(){
-    tools.bitcoinist
-    tools.bitmag
-    tools.theblockchain
-    tools.coinmeme
-    tools.blockonomi
-    tools.bitcoin
-    tools.coindesk
+function update() {
+    tools.bitcoinist()
+    tools.bitmag()
+    tools.theblockchain()
+    tools.coinmeme()
+    tools.blockonomi()
+    tools.bitcoin()
+    tools.coindesk()
 }
-
+//coindesk
 router.get("/api/1DIxE06gUQFTNskLX7Nd", function (req, res, next) {
-var vd = {}
-var currentPage = 1
-if (typeof req.query.page !== 'undefined'){
-    currentPage = +req.query.page;
-}
-var queryRef = db.collection('articles')
-// .limit(10)
-// .offset(currentPage * 10)
-.where('site', '==', '1DIxE06gUQFTNskLX7Nd')
-.get()
-
-.then((snapshot) => {
-    snapshot.forEach((doc) => {
-        vd[doc.id] = doc.data()
-    });
-   res.status(200).json(vd)
-}).catch((err) => {
-    console.log('Error getting documents', err);
-});
-
-})
-
-router.get("/api/UZUksRVofjXewHCGH46B", function (req, res, next) {
     var vd = {}
     var currentPage = 1
-    if (typeof req.query.page !== 'undefined'){
+    if (typeof req.query.page !== 'undefined') {
         currentPage = +req.query.page;
     }
     var queryRef = db.collection('articles')
-    // .limit(10)
-    // .offset(currentPage * 10)
-    .where('site', '==', 'UZUksRVofjXewHCGH46B')
-    .get()
-    
-    .then((snapshot) => {
-        snapshot.forEach((doc) => {
-            vd[doc.id] = doc.data()
-        });
-       res.status(200).json(vd)
-    }).catch((err) => {
-        console.log('Error getting documents', err);
-    });
-    
-    })
-
-
-    router.get("/api/YFHfBR51cP9pPcomXRec", function (req, res, next) {
-        var vd = {}
-        var currentPage = 1
-        if (typeof req.query.page !== 'undefined'){
-            currentPage = +req.query.page;
-        }
-        var queryRef = db.collection('articles')
         // .limit(10)
         // .offset(currentPage * 10)
-        .where('site', '==', 'YFHfBR51cP9pPcomXRec')
+        .where('site', '==', '1DIxE06gUQFTNskLX7Nd')
         .get()
-        
+
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 vd[doc.id] = doc.data()
             });
-           res.status(200).json(vd)
+            res.status(200).json(vd)
         }).catch((err) => {
             console.log('Error getting documents', err);
         });
-        
-        })
 
-router.get("/api/Vd1wHH0eo9YPQYp0LUg2", function (req, res, next) {
-            var vd = {}
-            var currentPage = 1
-            if (typeof req.query.page !== 'undefined'){
-                currentPage = +req.query.page;
-            }
-            var queryRef = db.collection('articles')
-            // .limit(10)
-            // .offset(currentPage * 10)
-            .where('site', '==', 'Vd1wHH0eo9YPQYp0LUg2')
-            .get()
-            
-            .then((snapshot) => {
-                snapshot.forEach((doc) => {
-                    vd[doc.id] = doc.data()
-                });
-               res.status(200).json(vd)
-            }).catch((err) => {
-                console.log('Error getting documents', err);
+})
+
+//bitcoinist
+router.get("/api/UZUksRVofjXewHCGH46B", function (req, res, next) {
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'UZUksRVofjXewHCGH46B')
+        .get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
             });
-            
-            })
+            res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
+
+})
+
+//Bitcoinmagazine
+router.get("/api/YFHfBR51cP9pPcomXRec", function (req, res, next) {
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'YFHfBR51cP9pPcomXRec')
+        .get()
+
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
+            });
+            res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
+
+})
+
+//BitcoinNews
+router.get("/api/Vd1wHH0eo9YPQYp0LUg2", function (req, res, next) {
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'Vd1wHH0eo9YPQYp0LUg2')
+        .get()
+
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
+            });
+            res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
+
+})
+
+//The blockchain
 router.get("/api/IEuOxRvA5umqJpxVBUDE", function (req, res, next) {
-                var vd = {}
-                var currentPage = 1
-                if (typeof req.query.page !== 'undefined'){
-                    currentPage = +req.query.page;
-                }
-                var queryRef = db.collection('articles')
-                // .limit(10)
-                // .offset(currentPage * 10)
-                .where('site', '==', 'IEuOxRvA5umqJpxVBUDE')
-                .get()
-                
-                .then((snapshot) => {
-                    snapshot.forEach((doc) => {
-                        vd[doc.id] = doc.data()
-                    });
-                   res.status(200).json(vd)
-                }).catch((err) => {
-                    console.log('Error getting documents', err);
-                });
-                
-                })
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'IEuOxRvA5umqJpxVBUDE')
+        .get()
 
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
+            });
+            res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
+
+})
+
+//Blockonomi 
 router.get("/api/Zt6pBLjPpUXDaA4j4IlJ", function (req, res, next) {
-                    var vd = {}
-                    var currentPage = 1
-                    if (typeof req.query.page !== 'undefined'){
-                        currentPage = +req.query.page;
-                    }
-                    var queryRef = db.collection('articles')
-                    // .limit(10)
-                    // .offset(currentPage * 10)
-                    .where('site', '==', 'Zt6pBLjPpUXDaA4j4IlJ')
-                    .get()
-                    
-                    .then((snapshot) => {
-                        snapshot.forEach((doc) => {
-                            vd[doc.id] = doc.data()
-                        });
-                       res.status(200).json(vd)
-                    }).catch((err) => {
-                        console.log('Error getting documents', err);
-                    });
-                    
-                    })
+    var vd = {}
+    var currentPage = 1
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+    var queryRef = db.collection('articles')
+        // .limit(10)
+        // .offset(currentPage * 10)
+        .where('site', '==', 'Zt6pBLjPpUXDaA4j4IlJ')
+        .get()
 
-router.get("/api/Zt6pBLjPpUXDaA4j4IlJ", function (req, res, next) {
-                    var vd = {}
-                    var currentPage = 1
-                    if (typeof req.query.page !== 'undefined'){
-                        currentPage = +req.query.page;
-                    }
-                    var queryRef = db.collection('articles')
-                    // .limit(10)
-                    // .offset(currentPage * 10)
-                    .where('site', '==', 'Zt6pBLjPpUXDaA4j4IlJ')
-                    .get()
-                    
-                    .then((snapshot) => {
-                        snapshot.forEach((doc) => {
-                            vd[doc.id] = doc.data()
-                        });
-                       res.status(200).json(vd)
-                    }).catch((err) => {
-                        console.log('Error getting documents', err);
-                    });
-                    
-                    })
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                vd[doc.id] = doc.data()
+            });
+            res.status(200).json(vd)
+        }).catch((err) => {
+            console.log('Error getting documents', err);
+        });
 
-cron.schedule('* * */2 * * *', function(){
-    //console.log('running a task every minute');
+})
+
+
+
+//cron.schedule('*/2 * * * * *', function () {
+//console.log('running a task every two hour');
+//update()
 router.get('/api/content', function (req, res, next) {
     d = {};
     fd = {};
@@ -230,10 +214,10 @@ router.get('/api/content', function (req, res, next) {
     if (typeof req.query.page !== 'undefined') {
         currentPage = +req.query.page;
     }
-    
+
     sources = ["bitcoinist", "bitcoin", "bitmag", "theblockchain", "coindesk", "blockonomi", "coinmeme"]
- 
-      
+
+
     db.getCollections().then(collections => {
 
         db
@@ -260,9 +244,9 @@ router.get('/api/content', function (req, res, next) {
             .catch((err) => {
                 console.log('Error getting documents', err);
             });
-        })
+    })
 });
-});
+//});
 router.get("/", function (req, res) {
     res.json({
         status: "My API is alive!"

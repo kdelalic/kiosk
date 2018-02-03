@@ -42,12 +42,12 @@ admin.initializeApp({
 
 var db = admin.firestore();
 
-//var sources = ["CoinDesk", "Bitcoin News"]
+var sources = ["CoinDesk", "Bitcoin News","Bitcoin Magazine"]
 
 function check(url) {
     // Create a query against the collection
     return new Promise(function (resolve, reject) {
-        var queryRef = db.collection('coindesk').where('url', '==', url).get()
+        var queryRef = db.collection('articles').where('url', '==', url).get()
             .then((snapshot) => {
                 var vd = {}
                 snapshot.forEach((doc) => {
@@ -80,7 +80,9 @@ function tags(link, tag, subtag) {
 
 }
 
-var coindesk = function coindesk() {
+module.exports = {
+ coindesk: function coindesk() {
+    console.log("coindesk")
     var n = new Set();
     request("https://www.coindesk.com/", function (error, response, body) {
         if (error) {
@@ -100,7 +102,6 @@ var coindesk = function coindesk() {
                 if (!(n.has(link))) {
                     check(link).then((vd) => {
                         if (Object.keys(vd).length === 0) {
-                            console.log("S")
 
                             og
                                 .scrapeUrl(link)
@@ -136,7 +137,7 @@ var coindesk = function coindesk() {
 
                                 }).catch((err) => console.error("Fail"))
                         }
-                    })
+                    }).catch((err) => console.error("Fail"))
 
                 }
                 n.add(link)
@@ -145,11 +146,11 @@ var coindesk = function coindesk() {
         });
     });
 
-}
+},
 
 
-var bitcoin = function bitcoin() {
-
+bitcoin: function bitcoin() {
+    console.log("bitcoin")
     request("https://news.bitcoin.com/", function (error, response, body) {
         if (error) {
             return console.error('There was an error!');
@@ -160,9 +161,8 @@ var bitcoin = function bitcoin() {
         $('div[class="td_module_mx3 td_module_wrap td-animation-stack"]').find('div > a').each(function () {
 
             var a = $(this).attr('href');
-            check(link).then((vd) => {
+            check(a).then((vd) => {
                 if (Object.keys(vd).length === 0) {
-                    console.log("S")
                     og
                         .scrapeUrl(a)
                         .then((metadata) => {
@@ -188,14 +188,15 @@ var bitcoin = function bitcoin() {
                         }).catch((err) => console.error("Fail"))
                 }
 
-            })
+            }).catch((err) => console.error("Fail"))
         });
     });
 
-}
+},
 
 
-var blockonomi = function blockonomi() {
+blockonomi : function blockonomi() {
+    console.log("blockonomi")
     var links = ["https://blockonomi.com/page/2/", "https://blockonomi.com/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -208,7 +209,7 @@ var blockonomi = function blockonomi() {
             $('a[class="grid-thumb-image"]').each(function () {
 
                 var a = $(this).attr('href');
-                check(link).then((vd) => {
+                check(a).then((vd) => {
                     if (Object.keys(vd).length === 0) {
                         console.log("S")
                         og
@@ -234,14 +235,14 @@ var blockonomi = function blockonomi() {
 
                             }).catch((err) => console.error("Fail"))
                     }
-                })
+                }).catch((err) => console.error("Fail"))
             });
         });
     }
-}
+},
 
-var cointele = function cointele() {
-
+ cointele : function cointele() {
+    
     request("https://cointelegraph.com/", function (error, response, body) {
         if (error) {
             return console.error('There was an error!');
@@ -275,9 +276,10 @@ var cointele = function cointele() {
         });
     });
 
-}
+},
 
-var coinmeme = function coinmeme() {
+ coinmeme : function coinmeme() {
+    console.log("coinmeme")
     n = new Set()
     request("https://coinmeme.io", function (error, response, body) {
         if (error) {
@@ -290,9 +292,9 @@ var coinmeme = function coinmeme() {
 
             var a = $(this).attr('href');
             if (!(n.has(a))) {
-                check(link).then((vd) => {
+                check(a).then((vd) => {
                     if (Object.keys(vd).length === 0) {
-                        console.log("S")
+                       
                         og
                             .scrapeUrl(a)
                             .then((metadata) => {
@@ -324,15 +326,15 @@ var coinmeme = function coinmeme() {
 
                             }).catch((err) => console.error("Fail"))
                     }
-                })
+                }).catch((err) => console.error("Fail"))
             }
             n.add(a)
         });
     });
 
-}
+},
 
-var suppo = function Suppoman() {
+suppo : function Suppoman() {
     console.log("ss")
     var allvid= ""
     nightmare
@@ -382,10 +384,11 @@ var suppo = function Suppoman() {
         .catch(function (error) {
             console.error('an error has occurred: ' + error);
         });
-}
-suppo()
+},
+//suppo()
 
-var theblockchain = function theblockchain() {
+ theblockchain : function theblockchain() {
+    console.log("theblockchain")
     var links = ["http://www.the-blockchain.com/news/page/2/", "http://www.the-blockchain.com/news/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -398,7 +401,7 @@ var theblockchain = function theblockchain() {
             $('div[class="td-block-span6"]').find('div > div > h3 > a').each(function () {
 
                 var a = $(this).attr('href');
-                check(link).then((vd) => {
+                check(a).then((vd) => {
                     if (Object.keys(vd).length === 0) {
 
                         og
@@ -424,69 +427,15 @@ var theblockchain = function theblockchain() {
 
                             }).catch((err) => console.error("Fail"))
                     }
-                })
+                }).catch((err) => console.error("Fail"))
             });
         });
     }
-}
-
-var youtube = function youtube() {
-    request({
-        uri: 'https://www.youtube.com/user/Suppoman2011/videos'
-    }, function (err, response, body) {
-        var self = this;
-        self.items = new Array(); //I feel like I want to save my results in an array
-
-        //Just a basic error check
-        if (err && response.statusCode !== 200) {
-            console.log('Request error.');
-        }
-
-        //Send the body param as the HTML code we will parse in jsdom
-        //also tell jsdom to attach jQuery in the scripts
-        jsdom.env({
-            html: body,
-            scripts: ['http://code.jquery.com/jquery-1.6.min.js']
-        }, function (err, window) {
-            //Use jQuery just as in any regular HTML page
-            var $ = window.jQuery,
-                $body = $('body'),
-                $videos = $body.find('.style-scope ytd-grid-renderer');
-
-            //I know .video-entry elements contain the regular sized thumbnails
-            //for each one of the .video-entry elements found
-            $videos.each(function (i, item) {
-
-                //I will use regular jQuery selectors
-                var $a = $(item).children('a'),
-
-                    //first anchor element which is children of our .video-entry item
-                    $title = $(item).find('.video-title .title').text(),
+},
 
 
-                    $img = $a.find('yt-img-shadow.img'); //thumbnail
-
-                //and add all that data to my items array
-                self.items[i] = {
-                    href: $a.attr('href'),
-                    title: $title.trim(),
-
-                    //there are some things with youtube video thumbnails, those images whose data-thumb attribute
-                    //is defined use the url in the previously mentioned attribute as src for the thumbnail, otheriwse
-                    //it will use the default served src attribute.
-                    thumbnail: $img.attr('data-thumb') ? $img.attr('data-thumb') : $img.attr('src'),
-                    urlObj: url.parse($a.attr('href'), true) //parse our URL and the query string as well
-                };
-            });
-
-            //let's see what we've got
-            console.log(self.items);
-        });
-    });
-}
-
-var bitmag = function bitmag() {
-
+bitmag : function bitmag() {
+    console.log("bitmag")
     request("https://bitcoinmagazine.com", function (error, response, body) {
         if (error) {
             return console.error('There was an error!');
@@ -497,7 +446,7 @@ var bitmag = function bitmag() {
         $('div[class="col-lg-5 push-lg-10 category-list--date"]').find('a').each(function () {
 
             var a = $(this).attr('href');
-            check(link).then((vd) => {
+            check("https://bitcoinmagazine.com" + a).then((vd) => {
                 if (Object.keys(vd).length === 0) {
 
                     og
@@ -527,9 +476,10 @@ var bitmag = function bitmag() {
         });
     });
 
-}
+},
 
-var bitcoinist = function bitcoinist() {
+bitcoinist : function bitcoinist() {
+    console.log("bitcoinist")
     var links = ["http://bitcoinist.com/category/blockchain-technology/", "http://bitcoinist.com/category/altcoins/"]
     for (let c of links) {
         request(c, function (error, response, body) {
@@ -550,7 +500,7 @@ var bitcoinist = function bitcoinist() {
                     function (error) { // failure handler
                         console.log(error)
                     })
-                check(link).then((vd) => {
+                check(a).then((vd) => {
                     if (Object.keys(vd).length === 0) {
 
                         og
@@ -568,20 +518,20 @@ var bitcoinist = function bitcoinist() {
                                     "id": docRef.id,
                                     "site": "UZUksRVofjXewHCGH46B",
                                     "url": metadata["url"],
-                                    "title": metadata["title"],
+                                    "title": title,
                                     "image": metadata["image"],
                                     "date-a": date
                                 }
-                                console.log(articles)
-                                //docRef.set(articles)
+                                //console.log(articles)
+                                docRef.set(articles)
                             }).catch((err) => console.error("Fail"))
                     }
-                })
+                }).catch((err) => console.error("cFail"))
             });
         });
     }
 }
-
+}
 //bitcoinist()
 // bitcoin()
 // bitmag()
