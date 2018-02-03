@@ -145,7 +145,6 @@ class Crypto extends Component {
 	};
 
 	coinData = (dataFromChild, key) => {
-		console.log("data",dataFromChild)
 		const addSub = "5~CCCAGG~" + dataFromChild.value.substring(dataFromChild.value.indexOf("(") + 1, dataFromChild.value.indexOf(")")) + "~" + this.state.convertCurrency
 		this.setState({
 			...this.state,
@@ -161,7 +160,6 @@ class Crypto extends Component {
 				},
 			}
 		}, () => {
-			console.log(this.state[this.state.userID])
 			firestore.collection("coins")
 			.doc(this.state.userID)
 			.set(this.state[this.state.userID], {merge: true})

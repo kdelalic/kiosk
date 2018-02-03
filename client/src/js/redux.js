@@ -59,6 +59,11 @@ export const setUserLoading = userLoading => ({
     userLoading
 })
 
+export const addCoin = coin => ({
+    type: 'ADD_COIN',
+    coin
+})
+
 //reducers
 
 export const user = (state = {}, action) => {
@@ -140,18 +145,28 @@ export const userLoading = (state = {}, action) => {
     }
 }
 
+export const coins = (state = {}, action) => {
+    switch (action.type) {
+        case 'ADD_COIN':
+            return action.coin
+        default: 
+            return state
+    }
+}
+
 const rootReducer = combineReducers({
     user,
     bookmarkIDs,
     bookmarks,
     sources,
     bookmarksLoaded,
-    userLoading
+    userLoading,
+    coins
 });
 
 export default rootReducer
 
-export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, sources: {}, bookmarksLoaded: false, userLoading: false}) {
+export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, sources: {}, bookmarksLoaded: false, userLoading: false, coins: {}}) {
     const store = createStore(rootReducer, initialState);
     return store;
 }

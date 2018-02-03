@@ -198,29 +198,32 @@ class Content extends Component {
     render() {
         return (
             <div className="content">
-                <Grid container spacing={24} className="headline">
-
-                    <Grid item md={12} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
-                        <Progress minimal coins={this.state.coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
-                    </Grid>
-
-                    <Grid item md={6}>
-                        <Typography type="headline" component="h2" className="content-title">
-                            {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
-                        </Typography>
-                    </Grid>
-
                     {this.props.user ?
-                        <Grid item md={6}>
-                            <Link to={'/cryptofolio'}>
-                                <Button raised color="secondary" style={{ float: 'right' }}>
-                                    Cryptofolio
-                                </Button>
-                            </Link>
+                        <Grid container spacing={24} className="headline">
+                            <Grid item md>
+                                <Typography type="headline" component="h2" className="content-title">
+                                    {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
+                                </Typography>
+                            </Grid>
+                            <Grid item md={6} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
+                                <Progress minimal coins={this.state.coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
+                            </Grid>
+                            <Grid item md>
+                                <Link to={'/cryptofolio'}>
+                                    <Button raised color="secondary" style={{ float: 'right' }}>
+                                        Cryptofolio
+                                    </Button>
+                                </Link>
+                            </Grid> 
                         </Grid> :
-                        <div />
+                        <Grid container spacing={24} className="headline">
+                            <Grid item md>
+                                <Typography type="headline" component="h2" className="content-title">
+                                    {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
+                                </Typography>
+                            </Grid>
+                        </Grid>
                     }
-                </Grid>
 
                 <div className="feed">
                     {this.state.articles && Object.keys(this.state.articles).map((key) => {
