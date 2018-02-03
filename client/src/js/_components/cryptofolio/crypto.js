@@ -12,6 +12,12 @@ import socketIOClient from "socket.io-client";
 import axios from 'axios'
 import { base, firestore } from '../../firebase'
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+    addCoin
+} from '../../redux.js';
+
 class Crypto extends Component {
 	constructor(props) {
 		super(props);
@@ -161,8 +167,9 @@ class Crypto extends Component {
 			}
 		}, () => {
 			firestore.collection("coins")
-			.doc(this.state.userID)
-			.set(this.state[this.state.userID], {merge: true})
+				.doc(this.state.userID)
+				.set(this.state[this.state.userID].coins, {merge: true})
+			this.props.addCoin(key, dataFromChild)
 			this.socket.emit('SubAdd', { subs: this.state[this.state.userID].subscriptions });
 			this.handleClose();
 		})
@@ -247,4 +254,13 @@ class Crypto extends Component {
 	}
 }
 
-export default Crypto;
+const mapDispatchToProps = dispatch => {
+    return {
+        addCoin: bindActionCreators(addCoin, dispatch),
+    };
+};
+
+export default connect(
+	null,
+    mapDispatchToProps
+)(Crypto);

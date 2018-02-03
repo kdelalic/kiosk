@@ -16,7 +16,8 @@ import {
     setBookmarkIDs,
     addBookmark,
     setBookmarksLoaded,
-    setUserLoading
+    setUserLoading,
+    setCoins
 } from './redux.js';
 import {
     Route,
@@ -73,6 +74,9 @@ class App extends Component {
                                 [key]: true
                             }
                             return true
+                        })
+                        firestore.collection("coins").doc(user.uid).get().then(coins => {
+                            this.props.setCoins(coins.data())
                         })
                         this.props.setBookmarkIDs(bookmarkIDs)
                         if(!this.props.bookmarksLoaded) {
@@ -175,7 +179,8 @@ const mapDispatchToProps = dispatch => {
         setBookmarkIDs: bindActionCreators(setBookmarkIDs, dispatch),
         addBookmark: bindActionCreators(addBookmark, dispatch),
         setBookmarksLoaded: bindActionCreators(setBookmarksLoaded, dispatch),
-        setUserLoading: bindActionCreators(setUserLoading, dispatch)
+        setUserLoading: bindActionCreators(setUserLoading, dispatch),
+        setCoins: bindActionCreators(setCoins, dispatch)
     };
 };
 

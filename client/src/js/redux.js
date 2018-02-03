@@ -59,8 +59,14 @@ export const setUserLoading = userLoading => ({
     userLoading
 })
 
-export const addCoin = coin => ({
+export const setCoins = coins => ({
+    type: 'SET_COINS',
+    coins
+})
+
+export const addCoin = (key, coin) => ({
     type: 'ADD_COIN',
+    key,
     coin
 })
 
@@ -152,7 +158,12 @@ export const userLoading = (state = {}, action) => {
 export const coins = (state = {}, action) => {
     switch (action.type) {
         case 'ADD_COIN':
-            return action.coin
+            return {
+                ...this.state,
+                [action.key]: action.coin
+            }
+        case 'SET_COINS':
+            return action.coins
         default: 
             return state
     }

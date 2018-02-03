@@ -15,7 +15,7 @@
     "newtab": "index.html"
   },
   
-  "content_security_policy": "script-src 'self' https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'; default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; script-src 'self' http://localhost:5000 https://localhost:5000 'unsafe-eval'; connect-src http://localhost:5000 https://localhost:5000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;",
 
   "permissions": [
     "activeTab",

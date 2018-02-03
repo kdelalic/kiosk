@@ -7,6 +7,7 @@ import Progress from './_components/cryptofolio/progress.js'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
+import { CircularProgress } from 'material-ui/Progress';
 
 import axios from 'axios'
 // import { firestore } from './firebase.js'
@@ -206,10 +207,13 @@ class Content extends Component {
                                 </Typography>
                             </Grid>
                             {this.props.investmentProgressVisible ? 
-                            <Grid item md={6} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
-                                <Progress minimal coins={this.state.coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
-                            </Grid> :
-                            <div />
+                                Object.keys(this.props.coins).length !== 0? 
+                                <Grid item md={6} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
+                                    <Progress minimal convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
+                                </Grid> :
+                                <CircularProgress color="secondary" />
+                                 :
+                                <div />
                             }
                             <Grid item md>
                                 <Link to={'/cryptofolio'}>
@@ -243,7 +247,8 @@ class Content extends Component {
 const mapStateToProps = state => ({
     sources: state.sources,
     user: state.user,
-    investmentProgressVisible: state.investmentProgressVisible
+    investmentProgressVisible: state.investmentProgressVisible,
+    coins: state.coins
 });
 
 export default connect(

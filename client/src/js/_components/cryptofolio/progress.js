@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../../css/cryptofolio/progress.css';
 import Paper from 'material-ui/Paper';
 import { checkPos } from './helpers.js'
+import { connect } from 'react-redux';
 
 class Progress extends Component {
 
@@ -18,25 +19,43 @@ class Progress extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.CAD !== this.props.CAD) {
+		var profit = 0
+		var initial = 0
+		var holdings = 0
+		var change = 0
+		for (var key in nextProps.coins) {
+			const coin = nextProps.coins[key]
+			if (coin.profit !== undefined) {
+				profit = profit + coin.profit
+				initial = initial + coin.price * coin.amount
+				holdings = initial + profit
+				change = profit / initial * 100
+			}
+		}
+		this.setState({
+			...this.state,
+			initial: initial,
+			profit: profit,
+			holdings: holdings,
+			change: change,
+		})
+	}
+
+	componentDidMount() {
 			this.setState({
 				...this.state,
-				CAD: nextProps.CAD
+				CAD: this.props.CAD
 			})
-		}
-		if (nextProps.convertCurrency !== this.props.convertCurrency) {
 			this.setState({
 				...this.state,
-				convertCurrency: nextProps.convertCurrency
+				convertCurrency: this.props.convertCurrency
 			})
-		}
-		if (nextProps.coins !== this.props.coins) {
 			var profit = 0
 			var initial = 0
 			var holdings = 0
 			var change = 0
-			for (var key in nextProps.coins) {
-				const coin = nextProps.coins[key]
+			for (var key in this.props.coins) {
+				const coin = this.props.coins[key]
 				if (coin.profit !== undefined) {
 					profit = profit + coin.profit
 					initial = initial + coin.price * coin.amount
@@ -51,7 +70,6 @@ class Progress extends Component {
 				holdings: holdings,
 				change: change,
 			})
-		}
 	}
 
 	render() {
@@ -89,4 +107,10 @@ class Progress extends Component {
 	}
 }
 
-export default Progress;
+const mapStateToProps = state => ({
+    coins: state.coins,
+});
+
+export default connect(
+    mapStateToProps
+)(Progress);
