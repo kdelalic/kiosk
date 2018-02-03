@@ -206,7 +206,10 @@ class Topbar extends Component {
                         <Button ref={node => {this.button = node}} onClick={this.openApps} className="appsLogo">
                             <img src={AppsLogo} alt="appsLogo" />
                         </Button>
-                        {this.props.user === null ? <div/> : 
+                        {this.props.user === null ? 
+                            <IconButton className="bookmarksButton" aria-label="Bookmarks" onClick={this.openLogin}>
+                                <Bookmark className="bookmarks"/>
+                            </IconButton> : 
                             <Link to={'/bookmarks'}>
                                 <IconButton className="bookmarksButton" aria-label="Bookmarks">
                                     <Bookmark className="bookmarks"/>

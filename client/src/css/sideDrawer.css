@@ -23,6 +23,12 @@
 
 .preferences {
     display: flex;
+    flex-direction: column;
+    
+}
+
+.preference {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

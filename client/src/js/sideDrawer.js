@@ -8,6 +8,11 @@ import Typography from 'material-ui/Typography'
 import Avatar from 'material-ui/Avatar';
 import Switch from 'material-ui/Switch';
 import { withStyles } from 'material-ui/styles';
+import { bindActionCreators } from 'redux';
+
+import {
+    toggleInvestmentProgress,
+} from './redux.js';
 
 const styles = {
     bar: {},
@@ -56,18 +61,32 @@ class SideDrawer extends Component {
                         </div>
                     }
                     <div className="preferences">
-                        <Switch
-                            color="secondary"
-                            checked={this.props.topSitesVisible}
-                            onChange={this.props.toggleTopSites}
-                            aria-label="Top Sites Toggle"
-                            classes={{
-                                checked: classes.checked,
-                                bar: classes.bar,
-                              }}
-                            />
-                        <Typography component="h3" className="topSitesInfo">Recent Sites    
-                        </Typography>
+                        <div className="preference">
+                            <Switch
+                                color="secondary"
+                                checked={this.props.topSitesVisible}
+                                onChange={this.props.toggleTopSites}
+                                aria-label="Top Sites Toggle"
+                                classes={{
+                                    checked: classes.checked,
+                                    bar: classes.bar,
+                                }}
+                                />
+                            <Typography component="h3" className="topSitesInfo">Recent Sites</Typography>
+                        </div>
+                        <div className="preference">
+                            <Switch
+                                color="secondary"
+                                checked={this.props.investmentProgressVisible}
+                                onChange={this.props.toggleInvestmentProgress}
+                                aria-label="Top Sites Toggle"
+                                classes={{
+                                    checked: classes.checked,
+                                    bar: classes.bar,
+                                }}
+                                />
+                            <Typography component="h3" className="topSitesInfo">Investment Tracker</Typography>
+                        </div>
                     </div>
                     <Divider/>
                 </div>
@@ -78,8 +97,16 @@ class SideDrawer extends Component {
 
 const mapStateToProps = state => ({
     user: state.user,
+    investmentProgressVisible: state.investmentProgressVisible
 });
 
+const mapDispatchToProps = dispatch => {
+    return {
+        toggleInvestmentProgress: bindActionCreators(toggleInvestmentProgress, dispatch)
+    };
+};
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(withStyles(styles)(SideDrawer));

@@ -205,9 +205,12 @@ class Content extends Component {
                                     {this.state.source === "content" ? "Latest News" : this.props.sources[this.state.source].name}
                                 </Typography>
                             </Grid>
+                            {this.props.investmentProgressVisible ? 
                             <Grid item md={6} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
                                 <Progress minimal coins={this.state.coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
-                            </Grid>
+                            </Grid> :
+                            <div />
+                            }
                             <Grid item md>
                                 <Link to={'/cryptofolio'}>
                                     <Button raised color="secondary" style={{ float: 'right' }}>
@@ -239,7 +242,8 @@ class Content extends Component {
 
 const mapStateToProps = state => ({
     sources: state.sources,
-    user: state.user
+    user: state.user,
+    investmentProgressVisible: state.investmentProgressVisible
 });
 
 export default connect(
