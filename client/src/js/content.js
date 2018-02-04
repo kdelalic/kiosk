@@ -36,7 +36,9 @@ class Content extends Component {
             languages: {
                 en: 'English',
                 fr: 'French',
-                de: 'German'
+                de: 'German',
+                es: 'Spanish',
+                ru: 'Russian'
             },
             activeLanguage: 'en',
             languageChanged: false
@@ -220,20 +222,15 @@ class Content extends Component {
     _handleLanguageChange = (value) => {
         this.setState({
             ...this.state,
-            activeLanguage: value.target.value
+            activeLanguage: value.target.value,
+            articles: (value.target.value === 'en') ? this.state.ogArticles : this.state.articles
         })
 
         if (value.target.value === 'en') {
-            this.setState({
-                ...this.state,
-                articles: this.state.ogArticles
-            })
-
             return true
         }
 
         const headlines = [];
-
         Object.keys(this.state.ogArticles).map(articleKey => {
             headlines.push(this.state.ogArticles[articleKey].title)
         })
@@ -252,7 +249,7 @@ class Content extends Component {
                     articlesToUpdate[articleKey] = {
                         ...this.state.ogArticles[articleKey],
                         title: results[index]
-                    };
+                    }
                 })
 
                 this.setState({
@@ -310,6 +307,8 @@ class Content extends Component {
                     <MenuItem value={'en'}>English</MenuItem>
                     <MenuItem value={'fr'}>French</MenuItem>
                     <MenuItem value={'de'}>German</MenuItem>
+                    <MenuItem value={'es'}>Spanish</MenuItem>
+                    <MenuItem value={'ru'}>Russian</MenuItem>
                 </Select>
 
                 <div className="feed">
