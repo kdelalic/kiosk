@@ -248,6 +248,55 @@ router.get('/api/content', function (req, res, next) {
             });
     })
 });
+
+router.get('/api/content/alexa', function (req, res, next) {
+    d = {};
+    fd = [];
+    var currentPage = 1
+
+    if (typeof req.query.page !== 'undefined') {
+        currentPage = +req.query.page;
+    }
+
+    sources = ["bitcoinist", "bitcoin", "bitmag", "theblockchain", "coindesk", "blockonomi", "coinmeme"]
+
+
+    db.getCollections().then(collections => {
+
+        db
+            .collection("articles")
+            .limit(20)
+            .offset(currentPage * 20)
+            .get()
+
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    var i = {}
+                    var docData = doc.data()
+                    d[doc.id] = {
+                        redirectionURL: docData.url,
+                        titleText: docData.title,
+                        mainText: docData.title,
+                        updateDate: docData['date-a'],
+                        uid: docData.id
+                    }
+                });
+
+                var k = Object.keys(d)
+
+                var sk = shuffle(k)
+                //fd = {}
+                for (var i = 0; i < sk.length; i++) {
+                    fd.push(d[sk[i]])
+                }
+                res.status(200).json(fd);
+            })
+            .catch((err) => {
+                console.log('Error getting documents', err);
+            });
+    })
+});
+
 //});
 router.get("/", function (req, res) {
     res.json({

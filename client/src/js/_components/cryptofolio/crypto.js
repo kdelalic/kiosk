@@ -8,9 +8,8 @@ import AddCoin from './addcoin.js';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import { checkPos, toMonth } from './helpers.js'
-import socketIOClient from "socket.io-client";
 import axios from 'axios'
-import { base, firestore } from '../../firebase'
+import { firestore } from '../../firebase'
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,9 +21,6 @@ class Crypto extends Component {
 	constructor(props) {
 		super(props);
 
-		this.endpoint="wss://streamer.cryptocompare.com";
-		this.socket = socketIOClient(this.endpoint);
-
 		this.state = {
 			open: false,
 			convertCurrency: 'USD'
@@ -34,52 +30,21 @@ class Crypto extends Component {
 	componentWillReceiveProps(nextProps) {
 		this.setState({
 			...this.state,
-			[this.userID]: {
-				...this.state[this.userID],
-				coins: nextProps.coins
-			}
+			coins: nextProps.coins
 		})
 	}
 
 	componentDidMount() {
-		this.firebaseRef = base.initializedApp.firebase_;
-		this.userID = this.firebaseRef.auth() && this.firebaseRef.auth().currentUser && this.firebaseRef.auth().currentUser.uid;
-
-		if (this.userID) {
+		if (this.props.coins) {
 			this.setState({
 				...this.state,
-				userID: this.userID,
-				[this.userID]: {
-					subscriptions: {},
-					coins: {}
-				}
+				coins: this.props.coins
 			})
-
-			this._getRates.bind(this)
-		} else {
-			this.firebaseRef.auth().onAuthStateChanged(function(user) {
-				if (user) {
-					this.setState({
-						userID: user.uid,
-						[user.uid]: {
-							subscriptions: {},
-							coins: {}
-						}
-					}, () => {
-						this._getRates.bind(this)
-					})
-				} else {
-					// No user is signed in.
-				}
-			}.bind(this));			  
+			this._getRates
 		}
 	}
 
-	_getRates() {
-		this.userRef = base.syncState(this.state.userID, {
-			context: this,
-			state: this.state.userID
-		});
+	_getRates = () => {
 		axios.get("https://api.fixer.io/latest?base=USD")
 			.then(response => {
 				const CAD = response.data["rates"]["CAD"];
@@ -94,64 +59,6 @@ class Crypto extends Component {
 		});
 	}
 
-	// componentWillUnmount() {
-	// 	base.removeBinding(this.userRef);
-	// 	this.socket.emit('SubRemove', { subs: this.state[this.userID].subscriptions });
-	// }
-
-	// componentWillUpdate(nextProps, nextState) {
-	// 	if (this.state[this.userID] !== undefined && nextState[this.userID] !== undefined && nextState[this.userID].subscriptions !== this.state[this.userID].subscriptions) {
-	// 		this.socket.on("m", data => {
-	// 			for (var key in nextState[this.userID].subscriptions) {
-	// 				const response = data.split("~")
-	// 				const newPrice = parseFloat(response[5])
-	// 				const symbol = this.state[this.userID].coins[key].value.substring(this.state[this.userID].coins[key].value.indexOf("(") + 1, this.state[this.userID].coins[key].value.indexOf(")")).toUpperCase()
-	// 				if (!isNaN(newPrice) && (newPrice > (this.state[this.userID].coins[key].currentPrice * 0.5) && (newPrice < this.state[this.userID].coins[key].currentPrice * 1.5)) && response[2] === symbol) {
-	// 					this.setState({
-	// 						...this.state,
-	// 						[this.userID]: {
-	// 							...this.state.userID,
-	// 							coins: {
-	// 								...this.state.coins,
-	// 								[key]: {
-	// 									...this.state[this.userID].coins[key],
-	// 									currentPrice: newPrice,
-	// 									profit: parseFloat(((newPrice - this.state[this.userID].coins[key].price * (this.state[this.userID].coins[key].currency.toUpperCase() === "USD" && this.state.convertCurrency === "CAD" ? this.state.CAD : this.state[this.userID].coins[key].currency.toUpperCase() === "CAD" && this.state.convertCurrency === "USD" ? 1 / this.state.CAD : 1)) * this.state[this.userID].coins[key].amount).toFixed(2))
-	// 								}
-	// 							}
-	// 						}
-	// 					})
-	// 				}
-	// 			}
-	// 		});
-	// 	}
-	// }
-
-	// componentWillReceiveProps(nextProps) {
-	// 	if (this.props.convertCurrency !== nextProps.convertCurrency) {
-	// 		this.socket.emit('SubRemove', { subs: this.state[this.userID].subscriptions });
-	// 		this.setState({
-	// 			...this.state,
-	// 			convertCurrency: nextProps.convertCurrency
-	// 		}, () => {
-	// 			const newSub = {}
-	// 			for (var key in this.state[this.userID].subscriptions) {
-	// 				const splitSub = this.state[this.userID].subscriptions[key].split("~")
-	// 				newSub[key] = splitSub[0] + "~" + splitSub[1] + "~" + splitSub[2] + "~" + this.state.convertCurrency
-	// 			}
-	// 			this.setState({
-	// 				...this.state,
-	// 				[this.userID]: {
-	// 					...this.state.userID,
-	// 					subscriptions: newSub
-	// 				}
-	// 			}, () => {
-	// 				this.socket.emit('SubAdd', { subs: this.state[this.userID].subscriptions });
-	// 			})
-	// 		})
-	// 	}
-	// }
-
 	handleOpen = () => {
 		this.setState({ ...this.state, open: true });
 	};
@@ -161,53 +68,31 @@ class Crypto extends Component {
 	};
 
 	coinData = (dataFromChild, key) => {
-		const addSub = "5~CCCAGG~" + dataFromChild.value.substring(dataFromChild.value.indexOf("(") + 1, dataFromChild.value.indexOf(")")) + "~" + this.state.convertCurrency
 		this.setState({
 			...this.state,
-			[this.state.userID]: {
-				...this.state.userID,
-				subscriptions: {
-					...this.state[this.state.userID].subscriptions,
-					[key]: addSub
-				},
-				coins: {
-					...this.state[this.state.userID].coins,
-					[key]: dataFromChild
-				},
-			}
+			coins: {
+				...this.state.coins,
+				[key]: dataFromChild
+			},
 		}, () => {
 			firestore.collection("coins")
-				.doc(this.state.userID)
-				.set(this.state[this.state.userID].coins, {merge: true})
+				.doc(this.props.user.uid)
+				.set(this.state.coins, {merge: true})
 			this.props.addCoin(key, dataFromChild)
-			this.socket.emit('SubAdd', { subs: this.state[this.state.userID].subscriptions });
 			this.handleClose();
 		})
 	};
 
 	handleChange = event => {
-		this.socket.emit('SubRemove', { subs: this.state[this.state.userID].subscriptions });
 		this.setState({
 			...this.state,
 			convertCurrency: event.target.value
-		}, () => {
-			const newSub = {}
-			for (var key in this.state[this.state.userID].subscriptions) {
-				const splitSub = this.state[this.state.userID].subscriptions[key].split("~")
-				newSub[key] = splitSub[0] + "~" + splitSub[1] + "~" + splitSub[2] + "~" + event.target.value
-			}
-			this.setState({
-				...this.state,
-				subscriptions: newSub
-			}, () => {
-				this.socket.emit('SubAdd', { subs: this.state[this.state.userID].subscriptions });
-			})
 		})
 	}
 
 	render() {
 		let coins = undefined;
-		if (this.state.userID) coins = this.state[this.state.userID].coins;
+		if (this.props.coins) coins = this.state.coins
 		return (
 			<div className="crypto">
 				<Progress coins={coins} convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
@@ -264,6 +149,11 @@ class Crypto extends Component {
 	}
 }
 
+const mapStateToProps = state => ({
+	user: state.user,
+    coins: state.coins
+});
+
 const mapDispatchToProps = dispatch => {
     return {
         addCoin: bindActionCreators(addCoin, dispatch),
@@ -271,6 +161,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-	null,
+	mapStateToProps,
     mapDispatchToProps
 )(Crypto);
