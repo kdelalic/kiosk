@@ -11,6 +11,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var path = require('path');
+var http = require('http');
 
 var app = express();
 app.use(auth.initialize());
@@ -57,3 +58,8 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+const server = http.createServer(app).listen(process.env.PORT || 3000);
+    server.on('listening', function() {
+    console.info('=> Server listening on port', process.env.PORT || 3000);
+});
