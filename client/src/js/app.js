@@ -61,7 +61,7 @@ class App extends Component {
     componentWillMount() {
         this.firebase.auth().onAuthStateChanged( user => {
 			if (user) {             
-                firestore.collection("users")
+                firestore.collection("bookmarks")
                 .doc(user.uid)
                 .get()
                 .then( doc => {
@@ -76,14 +76,6 @@ class App extends Component {
                             }
                             return true
                         })
-                        firestore.collection("coins").doc(user.uid).get().then(coins => {
-                            if(coins.data() !== undefined && Object.keys(coins.data()).length !== 0){
-                                this.props.setCoins(coins.data())
-                            } else {
-                                this.props.setCoins({})
-                            }
-                            this.props.setCoinsLoaded(true)
-                        })
                         this.props.setBookmarkIDs(bookmarkIDs)
                         if(!this.props.bookmarksLoaded) {
                             setTimeout(this.loadBookmarks, 2000)
@@ -93,6 +85,14 @@ class App extends Component {
                 .catch(function(error) {
                     console.log("Error getting document:", error);
                 });
+                firestore.collection("coins").doc(user.uid).get().then(coins => {
+                    if(coins.data() !== undefined){
+                        this.props.setCoins(coins.data())
+                    } else {
+                        this.props.setCoins({})
+                    }
+                    this.props.setCoinsLoaded(true)
+                })
                 this.props.setUser(user)
 			}
         });

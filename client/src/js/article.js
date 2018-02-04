@@ -74,7 +74,7 @@ class Article extends Component {
             ...this.state,
             bookmarked: true
         })
-        firestore.collection("users").doc(this.props.user.uid).set({
+        firestore.collection("bookmarks").doc(this.props.user.uid).set({
             bookmarks: {
                 [this.props.id] : true
             }
@@ -89,7 +89,7 @@ class Article extends Component {
             ...this.state,
             bookmarked: false
         })
-        firestore.collection("users").doc(this.props.user.uid).update({
+        firestore.collection("bookmarks").doc(this.props.user.uid).update({
             ["bookmarks." + this.props.id]: firebase.firestore.FieldValue.delete()
         })
         this.props.removeBookmarkID(this.props.id)
