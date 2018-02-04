@@ -30,6 +30,7 @@ class Content extends Component {
         this.state = {
             source: "content",
             populating: false,
+            endReached: false,
             page: 1,
             articles: {},
             ogArticles: {},
@@ -51,7 +52,8 @@ class Content extends Component {
                 ...this.state,
                 source: nextProps.source,
                 page: 0,
-                articles: null
+                articles: null,
+                endReached: false
             }, () => {
                 window.scrollTo(0, 0)
                 this._populate(this.state.source)
@@ -60,7 +62,6 @@ class Content extends Component {
     }
 
     componentWillMount() {
-        window.scrollTo(0, 0)
         this._populate(this.state.source);
     }
 
@@ -74,7 +75,7 @@ class Content extends Component {
     }
 
     handleScroll = () => {
-        if(!this.state.populating){
+        if(!this.state.populating && !this.state.endReached){
             const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
             const body = document.body;
             const html = document.documentElement;
@@ -104,6 +105,12 @@ class Content extends Component {
                 const url = baseURL + "/api/content/?page=" + this.state.page
                 axios.get(url)
                     .then(response => {
+                        if (Object.keys(response.data).length === 0) {
+                            this.setState({
+                                ...this.state,
+                                endReached: true
+                            })
+                        }
                         this.setState({
                             ...this.state,
                             page: this.state.page + 1,
@@ -152,6 +159,12 @@ class Content extends Component {
                 const url = baseURL + "/api/" + source + "/?page=" + this.state.page
                 axios.get(url)
                     .then(response => {
+                        if (this.state.articles && Object.keys(response.data).length === Object.keys(this.state.articles).length) {
+                            this.setState({
+                                ...this.state,
+                                endReached: true
+                            })
+                        }
                         this.setState({
                             ...this.state,
                             page: this.state.page + 1,
