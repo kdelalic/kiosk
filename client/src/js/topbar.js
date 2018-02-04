@@ -46,15 +46,15 @@ class Topbar extends Component {
 
     componentDidMount(){
         /*eslint-disable no-undef*/
-        chrome.topSites.get(topSites => {
-            var sites = topSites
-            delete sites[8]
-            delete sites[9]
-            this.setState({
-                ...this.state,
-                sites: sites
-            })
-        })
+        // chrome.topSites.get(topSites => {
+        //     var sites = topSites
+        //     delete sites[8]
+        //     delete sites[9]
+        //     this.setState({
+        //         ...this.state,
+        //         sites: sites
+        //     })
+        // })
         /*eslint-enable no-undef*/
     }
 

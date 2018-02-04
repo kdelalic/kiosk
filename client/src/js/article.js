@@ -14,6 +14,10 @@ import CloseIcon from 'react-icons/lib/md/close'
 import Bookmark from 'react-icons/lib/fa/bookmark'
 import Trash from 'react-icons/lib/fa/trash'
 
+import Smile from 'react-icons/lib/fa/smile-o'
+import Meh from 'react-icons/lib/fa/meh-o'
+import Frown from 'react-icons/lib/fa/frown-o'
+
 import {firestore} from './firebase.js'
 import firebase from 'firebase';
 
@@ -44,6 +48,20 @@ class Article extends Component {
         this.state = {
             shareOpen: false,
             bookmarked: this.props.bookmarkIDs[this.props.id],
+        }
+    }
+
+    componentDidMount() {
+        if(this.props.articleData.score !== 5 && this.props.articleData.score !== undefined) {
+            this.setState({
+                ...this.state,
+                sentiment: this.props.articleData.score
+            })
+        } else {
+            this.setState({
+                ...this.state,
+                sentiment: Math.random()
+            })
         }
     }
 
@@ -98,6 +116,7 @@ class Article extends Component {
 
     render() {
         const { articleData } = this.props
+
         return (
             <div className="card">
                 <a className="cardLink" href={articleData.url} target="_blank" >
@@ -136,6 +155,7 @@ class Article extends Component {
                             // </TwitterShareButton>
                         }
                     </div>
+                    {this.state.sentiment < 0.33 ? <Frown className="sentiment" /> : this.state.sentiment > 0.34 && this.state.sentiment < 0.66 ? <Meh className="sentiment" /> : this.state.sentiment > 0.67 && this.state.sentiment <= 1 ? <Smile className="sentiment" /> : <div/>}
                 </div>
             </div>
         )

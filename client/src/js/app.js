@@ -56,9 +56,6 @@ class App extends Component {
 
     componentDidMount() {
         window.scrollTo(0, 0)
-    }
-
-    componentWillMount() {
         this.firebase.auth().onAuthStateChanged( user => {
 			if (user) {             
                 firestore.collection("bookmarks")

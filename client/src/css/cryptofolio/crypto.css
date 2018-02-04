@@ -11,6 +11,11 @@
 	position: relative;
 }
 
+.crypto .header > table,  .crypto .header > .table{
+	box-shadow: 0 0 20px #eae9e9!important;
+	border-radius: 5px!important;
+}
+
 .header > div {
 	width: 100%
 }

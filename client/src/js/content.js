@@ -65,6 +65,7 @@ class Content extends Component {
     }
 
     componentDidMount() {
+        this._populate(this.state.source);
         window.addEventListener("scroll", this.handleScroll);
     }
 

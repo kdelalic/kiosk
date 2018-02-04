@@ -17,6 +17,8 @@
 
 .cards .stat {
 	margin: 0 5px;
+	box-shadow: 0 0 20px #eae9e9!important;
+	border-radius: 5px!important;
 }
 
 .cards .stat .stat-content {
