@@ -13,25 +13,28 @@ class ChromeApps extends Component {
     }
 
     componentDidMount(){
-        // const types = [chrome.management.ExtensionType.LEGACY_PACKAGED_APP, chrome.management.ExtensionType.PACKAGED_APP, chrome.management.ExtensionType.HOSTED_APP];
-        // chrome.management.getAll(items => {
-        //     var apps = items.filter(item => types.includes(item.type));
-        //     Object.keys(apps).map(key => {
-        //         const chromeApp = apps[key]
-        //         this.setState({
-        //             ...this.state,
-        //             chromeApps: {
-        //                 ...this.state.chromeApps,
-        //                 [key]: {
-        //                     name: chromeApp.name,
-        //                     url: chromeApp.appLaunchUrl,
-        //                     icons: chromeApp.icons,
-        //                     enabled: chromeApp.enabled
-        //                 }
-        //             }
-        //         })
-        //     });
-        // });
+        /*eslint-disable no-undef*/
+        const types = [chrome.management.ExtensionType.LEGACY_PACKAGED_APP, chrome.management.ExtensionType.PACKAGED_APP, chrome.management.ExtensionType.HOSTED_APP];
+        chrome.management.getAll(items => {
+            var apps = items.filter(item => types.includes(item.type));
+            Object.keys(apps).map(key => {
+                const chromeApp = apps[key]
+                this.setState({
+                    ...this.state,
+                    chromeApps: {
+                        ...this.state.chromeApps,
+                        [key]: {
+                            name: chromeApp.name,
+                            url: chromeApp.appLaunchUrl,
+                            icons: chromeApp.icons,
+                            enabled: chromeApp.enabled
+                        }
+                    }
+                })
+                return true
+            });
+        });
+        /*eslint-enable no-undef*/
     }
 
     render() {

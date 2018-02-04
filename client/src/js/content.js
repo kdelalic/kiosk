@@ -9,14 +9,14 @@ import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 import { CircularProgress } from 'material-ui/Progress'
 
-import Input, { InputLabel } from 'material-ui/Input'
 import { MenuItem } from 'material-ui/Menu'
-import { FormControl, FormHelperText } from 'material-ui/Form'
 import Select from 'material-ui/Select'
 
 import axios from 'axios'
 // import { firestore } from './firebase.js'
 import {connect} from 'react-redux';
+
+import {baseURL} from './baseURL.js'
 
 import {
     Link
@@ -100,7 +100,7 @@ class Content extends Component {
 
             if (source === "content") {
                 console.log("POPULATING with", source)
-                const url = "/api/content/?page=" + this.state.page
+                const url = baseURL + "/api/content/?page=" + this.state.page
                 axios.get(url)
                     .then(response => {
                         this.setState({
@@ -148,7 +148,7 @@ class Content extends Component {
             } else {
                 console.log("POPULATING with", source + " (" + this.props.sources[this.state.source].name + ")")
                 // const url = "/api/" + source + "/?page=" + this.state.page
-                const url = "/api/" + source + "/?page=" + this.state.page
+                const url = baseURL + "/api/" + source + "/?page=" + this.state.page
                 axios.get(url)
                     .then(response => {
                         this.setState({
@@ -233,6 +233,7 @@ class Content extends Component {
         const headlines = [];
         Object.keys(this.state.ogArticles).map(articleKey => {
             headlines.push(this.state.ogArticles[articleKey].title)
+            return true
         })
 
         axios.get('/api/translate', {
@@ -250,6 +251,7 @@ class Content extends Component {
                         ...this.state.ogArticles[articleKey],
                         title: results[index]
                     }
+                    return true
                 })
 
                 this.setState({

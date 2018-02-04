@@ -1,4 +1,5 @@
 .sidebar {
+    top: 64px;
     position: fixed;
     width: 64px;
     height: calc(100% - 64px);

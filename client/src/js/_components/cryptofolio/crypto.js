@@ -40,7 +40,7 @@ class Crypto extends Component {
 				...this.state,
 				coins: this.props.coins
 			})
-			this._getRates
+			this._getRates()
 		}
 	}
 
