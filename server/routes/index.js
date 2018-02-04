@@ -11,6 +11,8 @@ var jwt = require("jwt-simple");
 var users = require("./users.js");
 var cfg = require("./config.js");
 var auth = require("./auth")();
+var axios = require('axios')
+var matchAll = require("match-all")
 
 // admin.initializeApp({
 //     credential: admin.credential.cert(serviceAccount),
@@ -277,6 +279,29 @@ router.post("/api/user", auth.authenticate(), function (req, res) {
             res.status(400).send("Error")
         });
 });
+
+router.get('/api/translate', function(req, res) {
+    const url = 'http://api.microsofttranslator.com/V2/Http.svc/Translate'
+    axios.get(url, {
+        params: {
+            to: req.query.to,
+            text: req.query.text
+        },
+        headers: {
+            'Ocp-Apim-Subscription-Key': '4550f6d7ccd2438db5269c7889426877'
+        }
+    })
+        .then(response => {
+            const trimmedResponse = response.data.replace('<string xmlns="http://schemas.microsoft.com/2003/10/Serialization/">', '').replace('</string>', '');
+            console.log(trimmedResponse)
+
+            const splittedResponse = trimmedResponse.split('--***--');
+            res.status(200).json({ results: splittedResponse })
+        })
+        .catch(err => {
+            console.log(err)
+        });
+})
 
 
 
