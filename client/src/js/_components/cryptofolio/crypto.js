@@ -31,6 +31,16 @@ class Crypto extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			...this.state,
+			[this.userID]: {
+				...this.state[this.userID],
+				coins: nextProps.coins
+			}
+		})
+	}
+
 	componentDidMount() {
 		this.firebaseRef = base.initializedApp.firebase_;
 		this.userID = this.firebaseRef.auth() && this.firebaseRef.auth().currentUser && this.firebaseRef.auth().currentUser.uid;

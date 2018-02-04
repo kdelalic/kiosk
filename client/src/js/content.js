@@ -233,11 +233,13 @@ class Content extends Component {
                     }
 
                 <div className="feed">
-                    {this.state.articles && Object.keys(this.state.articles).map((key) => {
+                    {this.state.articles ? Object.keys(this.state.articles).map((key) => {
                         return (
                             <Article className="newsComp" key={key} id={key} articleData={this.state.articles[key]}/>
                         )
-                    })}
+                    }):
+                    <CircularProgress color="secondary" />
+                    }
                 </div>
             </div>
         )

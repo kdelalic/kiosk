@@ -76,7 +76,11 @@ class App extends Component {
                             return true
                         })
                         firestore.collection("coins").doc(user.uid).get().then(coins => {
-                            this.props.setCoins(coins.data())
+                            if(coins.data() !== undefined){
+                                this.props.setCoins(coins.data())
+                            } else {
+                                this.props.setCoins({})
+                            }
                         })
                         this.props.setBookmarkIDs(bookmarkIDs)
                         if(!this.props.bookmarksLoaded) {
@@ -139,7 +143,9 @@ class App extends Component {
                             <div className="loading">
                                 <CircularProgress color="secondary" className="progress"/>
                             </div>
-                        </div> :
+                        </div> ? 
+                        this.props.coins === {} :
+                        <div /> :
                         <div />
                     }
                     <Topbar />
@@ -170,7 +176,8 @@ const mapStateToProps = state => ({
     user: state.user,
     bookmarkIDs: state.bookmarkIDs,
     bookmarksLoaded: state.bookmarksLoaded,
-    userLoading: state.userLoading
+    userLoading: state.userLoading,
+    coins: state.coins
 });
 
 const mapDispatchToProps = dispatch => {
