@@ -276,7 +276,7 @@ router.get('/api/content/alexa', function (req, res, next) {
                     d[doc.id] = {
                         redirectionURL: docData.url,
                         titleText: docData.title,
-                        mainText: '',
+                        mainText: docData.title,
                         updateDate: docData['date-a'],
                         uid: docData.id
                     }
