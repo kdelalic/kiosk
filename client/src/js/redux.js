@@ -74,6 +74,12 @@ export const toggleInvestmentProgress = () => ({
     type: 'TOGGLE_INVESTMENT_PROGRESS'
 })
 
+export const setCoinsLoaded = coinsLoaded => ({
+    type: 'SET_COINS_LOADED',
+    coinsLoaded
+})
+
+
 //reducers
 
 export const user = (state = {}, action) => {
@@ -178,6 +184,15 @@ export const investmentProgressVisible = (state = {}, action) => {
     }
 }
 
+export const coinsLoaded = (state = {}, action) => {
+    switch (action.type) {
+        case 'SET_COINS_LOADED':
+            return action.coinsLoaded
+        default:
+            return state
+    }
+}
+
 const rootReducer = combineReducers({
     user,
     bookmarkIDs,
@@ -186,12 +201,13 @@ const rootReducer = combineReducers({
     bookmarksLoaded,
     userLoading,
     coins,
-    investmentProgressVisible
+    investmentProgressVisible,
+    coinsLoaded
 });
 
 export default rootReducer
 
-export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, sources: {}, bookmarksLoaded: false, userLoading: false, coins: {}, investmentProgressVisible: true}) {
+export function configureStore(initialState = {user: null, bookmarkIDs: {}, bookmarks: {}, sources: {}, bookmarksLoaded: false, userLoading: false, coins: {}, investmentProgressVisible: true, coinsLoaded: false}) {
     const store = createStore(rootReducer, initialState);
     return store;
 }

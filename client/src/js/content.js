@@ -274,7 +274,7 @@ class Content extends Component {
                                 </Typography>
                             </Grid>
                             {this.props.investmentProgressVisible ? 
-                                Object.keys(this.props.coins).length !== 0? 
+                                this.props.coinsLoaded ? 
                                 <Grid item md={6} style={{margin: "auto", padding: "0", width: "100%"}} className="cryptoProgress">
                                     <Progress minimal convertCurrency={this.state.convertCurrency} CAD={this.state.CAD} />
                                 </Grid> :
@@ -330,7 +330,8 @@ const mapStateToProps = state => ({
     sources: state.sources,
     user: state.user,
     investmentProgressVisible: state.investmentProgressVisible,
-    coins: state.coins
+    coins: state.coins,
+    coinsLoaded: state.coinsLoaded
 });
 
 export default connect(

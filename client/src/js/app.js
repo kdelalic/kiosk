@@ -17,7 +17,8 @@ import {
     addBookmark,
     setBookmarksLoaded,
     setUserLoading,
-    setCoins
+    setCoins,
+    setCoinsLoaded
 } from './redux.js';
 import {
     Route,
@@ -76,11 +77,12 @@ class App extends Component {
                             return true
                         })
                         firestore.collection("coins").doc(user.uid).get().then(coins => {
-                            if(coins.data() !== undefined){
+                            if(coins.data() !== undefined && Object.keys(coins.data()).length !== 0){
                                 this.props.setCoins(coins.data())
                             } else {
                                 this.props.setCoins({})
                             }
+                            this.props.setCoinsLoaded(true)
                         })
                         this.props.setBookmarkIDs(bookmarkIDs)
                         if(!this.props.bookmarksLoaded) {
@@ -92,7 +94,6 @@ class App extends Component {
                     console.log("Error getting document:", error);
                 });
                 this.props.setUser(user)
-                // this.props.setUserLoading(false)
 			}
         });
     }
@@ -187,7 +188,8 @@ const mapDispatchToProps = dispatch => {
         addBookmark: bindActionCreators(addBookmark, dispatch),
         setBookmarksLoaded: bindActionCreators(setBookmarksLoaded, dispatch),
         setUserLoading: bindActionCreators(setUserLoading, dispatch),
-        setCoins: bindActionCreators(setCoins, dispatch)
+        setCoins: bindActionCreators(setCoins, dispatch),
+        setCoinsLoaded: bindActionCreators(setCoinsLoaded, dispatch),
     };
 };
 
