@@ -15,6 +15,7 @@ import {
     setUser,
     setBookmarkIDs,
     addBookmark,
+    setBookmarks,
     setBookmarksLoaded,
     setUserLoading,
     setCoins,
@@ -91,7 +92,11 @@ class App extends Component {
                     this.props.setCoinsLoaded(true)
                 })
                 this.props.setUser(user)
-			}
+			} else {
+                this.props.setCoins({})
+                this.props.setBookmarkIDs({})
+                this.props.setBookmarks({})
+            }
         });
     }
 
@@ -141,16 +146,14 @@ class App extends Component {
                             <div className="loading">
                                 <CircularProgress color="secondary" className="progress"/>
                             </div>
-                        </div> ? 
-                        this.props.coins === {} :
-                        <div /> :
+                        </div> :
                         <div />
                     }
                     <Topbar />
                     {sidebar && <Sidebar sortBySource={this.sortBySource}/>}
 
                     <Switch>
-                        <Route path="/"
+                        <Route path=""
                             render={() =>
                                 <Content
                                     source={this.state.source}
@@ -187,6 +190,7 @@ const mapDispatchToProps = dispatch => {
         setUserLoading: bindActionCreators(setUserLoading, dispatch),
         setCoins: bindActionCreators(setCoins, dispatch),
         setCoinsLoaded: bindActionCreators(setCoinsLoaded, dispatch),
+        setBookmarks: bindActionCreators(setBookmarks, dispatch),
     };
 };
 
